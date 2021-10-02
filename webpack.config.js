@@ -42,4 +42,35 @@ const extensionConfig = {
   },
   devtool: 'nosources-source-map'
 };
-module.exports = [ extensionConfig ];
+/** @type WebpackConfig */
+const webviewConfig = {
+  target: 'web',
+	mode: 'none',
+  entry: './src/webview/webview.ts',
+  output: {
+    path: path.resolve(__dirname, 'dist/webview'),
+    filename: 'webview.js',
+    libraryTarget: 'module'
+  },
+  resolve: {
+    extensions: ['.ts', '.js']
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'ts-loader'
+          }
+        ]
+      }
+    ]
+  },
+  devtool: 'nosources-source-map',
+  experiments: {
+    outputModule: true
+  }
+};
+module.exports = [ extensionConfig, webviewConfig ];

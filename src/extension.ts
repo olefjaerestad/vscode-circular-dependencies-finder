@@ -5,7 +5,6 @@ import { resolve, join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import * as madge from 'madge';
 import path = require('path');
-// import { d3 } from './client/d3';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -69,7 +68,7 @@ function getWebviewHtml({dependencies, extensionPath, webview}: IGetWebViewProps
     /**
      * https://code.visualstudio.com/api/extension-guides/webview#loading-local-content
      */
-    return ['src/client/d3.js'].map((relativeSrc) => (
+    return ['dist/webview/webview.js'].map((relativeSrc) => (
       /*html*/`<script src="${webview.asWebviewUri(vscode.Uri.file(path.join(extensionPath, relativeSrc)))}" type="module"></script>`
     )).join('\n');
   }
@@ -80,7 +79,7 @@ function getWebviewHtml({dependencies, extensionPath, webview}: IGetWebViewProps
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=viewport-width, initial-scale=1.0">
-        <!--<meta http-equiv="Content-Security-Policy" content="default-src">-->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${webview.cspSource};">
         <title>Circular dependencies</title>
       </head>
       <body>
@@ -90,36 +89,3 @@ function getWebviewHtml({dependencies, extensionPath, webview}: IGetWebViewProps
     </html>
   `;
 }
-
-
-// webpack({
-//   // entry: './mock/index.ts',
-//   // entry: '../mock/index.ts',
-//   // entry: 'mock/index.ts',
-//   entry: resolve(join(__dirname, '../mock/index.ts')),
-//   output: {
-//     filename: 'output.js',
-//     path: __dirname
-//   },
-//   // resolve: {
-//   //   extensions: ['.ts'],
-//   // },
-//   // module: {
-//   //   rules: [{
-//   //     test: /\.ts$/,
-//   //     loader: 'ts-loader',
-//   //     exclude: /node_modules/,
-//   //   }]
-//   // }
-// }, (err, stats) => {
-//   console.log(
-//     // err,
-//     stats?.toJson()
-//   );
-//   if (err || stats?.hasErrors()) {
-//     console.error('[Circular dependencies] Something went wrong while analyzing.');
-//   }
-// });
-// @ts-ignore
-// import('./mock/index').then((mod) => console.log(mod));
-// console.log('path', resolve(join(dirname(fileURLToPath(import.meta.url))), 'mock/index'));
