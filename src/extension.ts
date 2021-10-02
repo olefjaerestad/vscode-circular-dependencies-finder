@@ -17,30 +17,85 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vscode-circular-dependencies-finder.find', () => {
+	let disposable = vscode.commands.registerCommand('vscode-circular-dependencies-finder.find', async () => {
 		// The code you place here will be executed every time your command is executed
     try {
+      const files = await vscode.workspace.findFiles(
+        '**/*.{js,ts,jsx,tsx}',
+        'node_modules'
+      );
+      console.log(files);
+      const file = await vscode.window.showQuickPick(
+        files.map((file) => file.fsPath.split(vscode.workspace.name || '')[1]),
+        {
+          canPickMany: false,
+          title: 'Find circular dependencies: select starting file',
+          placeHolder: '/path/to/file.ts',
+        }
+      );
+      console.log({file});
+
+      if (!file) {
+        return;
+      }
+      // vscode.window.showQuickPick(['Foo', 'bar']).then((value) => console.log(value));
+      // console.log(await vscode.workspace.findFiles('**/*.ts'));
+      // const opened = await vscode.window.showOpenDialog();
+      // console.log(opened);
+      // const opened2 = await vscode.window.showWorkspaceFolderPick();
+      // console.log(opened2);
       // console.log('[Circular dependencies] Analyzing...');
-      vscode.window.showInformationMessage('[Circular dependencies] Analyzing dependency tree...');
+      // vscode.window.showInformationMessage('[Circular dependencies] Analyzing dependency tree...');
+      const dependencyTree = await vscode.window.withProgress({
+        // location: {viewId: 'editor'}
+        location: vscode.ProgressLocation.Notification,
+        title: '[Circular dependencies] Analyzing dependency tree...',
+        cancellable: true,
+      }, (progress, token) => {
+        console.log('waiting....');
+        console.log(progress, token);
+        // @ts-ignore
+        return madge(resolve(join(dirname(fileURLToPath(import.meta.url))), 'mock/index.ts'));
+        // return new Promise<string>((resolve, reject) => {
+        //   setTimeout(() => {
+        //     console.log('resolve');
+        //     resolve('hallo');
+        //   }, 5000);
+        // });
+      });
+
+      // console.log({dependencyTree: dependencyTree.circular()});
+
+      const panel = vscode.window.createWebviewPanel('circularDependencies', 'Circular dependencies', vscode.ViewColumn.One, {
+        // localResourceRoots: [
+        //   vscode.Uri.file(path.join(context.extensionPath, 'src'))
+        // ],
+        enableScripts: true,
+      });
+      panel.webview.html = getWebviewHtml({
+        dependencyTree: dependencyTree.circular(),
+        extensionPath: context.extensionPath,
+        webview: panel.webview,
+      });
       
       // @ts-ignore
-      madge(resolve(join(dirname(fileURLToPath(import.meta.url))), 'mock/index.ts')).then((deps) => {
-        // console.log('[Circular dependencies] Finished analyzing.');
-        console.log(deps.circular());
-        // Display a message box to the user
-		    vscode.window.showInformationMessage('[Circular dependencies] Finished analyzing.');
-        const panel = vscode.window.createWebviewPanel('circularDependencies', 'Circular dependencies', vscode.ViewColumn.One, {
-          // localResourceRoots: [
-          //   vscode.Uri.file(path.join(context.extensionPath, 'src'))
-          // ],
-          enableScripts: true,
-        });
-        panel.webview.html = getWebviewHtml({
-          dependencies: deps.circular(),
-          extensionPath: context.extensionPath,
-          webview: panel.webview,
-        });
-      });
+      // madge(resolve(join(dirname(fileURLToPath(import.meta.url))), 'mock/index.ts')).then((deps) => {
+      //   // console.log('[Circular dependencies] Finished analyzing.');
+      //   console.log(deps.circular());
+      //   // Display a message box to the user
+		  //   vscode.window.showInformationMessage('[Circular dependencies] Finished analyzing.');
+      //   const panel = vscode.window.createWebviewPanel('circularDependencies', 'Circular dependencies', vscode.ViewColumn.One, {
+      //     // localResourceRoots: [
+      //     //   vscode.Uri.file(path.join(context.extensionPath, 'src'))
+      //     // ],
+      //     enableScripts: true,
+      //   });
+      //   panel.webview.html = getWebviewHtml({
+      //     dependencies: deps.circular(),
+      //     extensionPath: context.extensionPath,
+      //     webview: panel.webview,
+      //   });
+      // });
     } catch(error) {
       // console.error('[Circular dependencies] error:', error);
       vscode.window.showErrorMessage(`[Circular dependencies] error: ${error}`);
@@ -54,15 +109,20 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 interface IGetWebViewProps {
-  dependencies: string[][],
+  dependencyTree: string[][],
   extensionPath: string,
   webview: vscode.Webview,
 }
-function getWebviewHtml({dependencies, extensionPath, webview}: IGetWebViewProps) {
-  let markup = /*html*/`<p>No circular dependencies, hooray!</p>`;
-  if (dependencies.length) {
-    markup = JSON.stringify(dependencies, null, 2);
-  }
+/**
+ * 
+ * https://content-security-policy.com/examples/allow-inline-script/
+ */
+function getWebviewHtml({dependencyTree, extensionPath, webview}: IGetWebViewProps) {
+  // let markup = /*html*/`<p>No circular dependencies, hooray!</p>`;
+  // if (dependencyTree.length) {
+  const dependencyTreeString = JSON.stringify(dependencyTree, null, 2);
+  // }
+  const nonce = generateNonce();
 
   function getJsScripts() {
     /**
@@ -79,13 +139,25 @@ function getWebviewHtml({dependencies, extensionPath, webview}: IGetWebViewProps
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=viewport-width, initial-scale=1.0">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${webview.cspSource};">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${webview.cspSource} 'nonce-${nonce}';">
         <title>Circular dependencies</title>
+        <script nonce="${nonce}">
+          window.dependencyTree = ${dependencyTreeString};
+        </script>
       </head>
       <body>
-        <pre>${markup}</pre>
+        <pre>${dependencyTreeString}</pre>
         ${getJsScripts()}
       </body>
     </html>
   `;
+}
+
+function generateNonce() {
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let nonce = '';
+  for (let i = 0; i < 32; ++i) {
+    nonce += possible[Math.floor(Math.random() * possible.length)];
+  }
+  return nonce;
 }
