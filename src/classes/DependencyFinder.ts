@@ -13,14 +13,26 @@ export class DependencyFinder {
       title: '[Circular dependencies] Analyzing dependency tree...',
       cancellable: true,
     }, (progress, token) => {
-      // TODO: Make this cancelable.
-      console.log('waiting....');
-      console.log(progress, token);
-      return madge(filePath);
-      // return new Promise<string>((resolve, reject) => {
-      //   setTimeout(() => {
-      //     console.log('resolve');
-      //     resolve('hallo');
+      // TODO: Ensure that this is cancelable when working with large dependency trees.
+      return new Promise<any>((resolve, reject) => {
+        token.onCancellationRequested(() => {
+          reject('Canceled.');
+        });
+        return madge(filePath).then(resolve);
+      });
+
+      // TODO: Remove.
+      // return new Promise<any>((resolve, reject) => {
+      //   token.onCancellationRequested(() => {
+      //     clearTimeout(timeout);
+      //     reject('Canceled.');
+      //   });
+      //   const timeout = setTimeout(() => {
+      //     resolve({
+      //       circular: () => {
+      //         return ['I am empty'];
+      //       }
+      //     });
       //   }, 5000);
       // });
     });

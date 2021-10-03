@@ -1,5 +1,5 @@
 import { d } from '../d/d';
 
 export function f() {
-  console.log('f() calls d', d());
+  console.info('f() calls d', d());
 }

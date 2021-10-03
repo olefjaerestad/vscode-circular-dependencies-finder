@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       new WebView(vscode, context).create(circularDependencies);
     } catch(error) {
-      vscode.window.showErrorMessage(`[Circular dependencies] error: ${error}`);
+      vscode.window.setStatusBarMessage(`[Circular dependencies] ${error}`, 5000);
     }
 	});
 

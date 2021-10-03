@@ -9,5 +9,5 @@ c();
 d();
 
 export function index() {
-  console.log('index()');
+  console.info('index()');
 }
