@@ -10,24 +10,26 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined (and must match the command field) in the package.json file
 	const disposableCommand = vscode.commands.registerCommand('vscode-circular-dependencies-finder.find', async () => {
     try {
-      const file = await new FilePicker(vscode.window, vscode.workspace).pick();
-      if (!file) {
+      const filePath = await new FilePicker(vscode.window, vscode.workspace).pick();
+      if (!filePath) {
         return;
       }
 
       const circularDependencies = await new DependencyFinder(vscode.window, vscode.ProgressLocation)
         .findCircular(
           // resolve(join(__dirname), '../src/mock/index.ts') // TODO: Remove
-          file
+          filePath
         );
 
-      new WebView(vscode, context).create(circularDependencies);
+      new WebView(vscode, context).create(
+        circularDependencies,
+        `Circular dependencies: ${filePath.split('/').reverse()[0]}`
+      );
     } catch(error) {
       vscode.window.setStatusBarMessage(`[Circular dependencies] ${error}`, 5000);
     }
 	});
 
-  // TODO: Ensure that this works with multiple webviews with different state in each.
   const disposableSerializer = vscode.window.registerWebviewPanelSerializer(WebView.type, new WebViewSerializer(vscode, context));
 
 	context.subscriptions.push(disposableCommand, disposableSerializer);

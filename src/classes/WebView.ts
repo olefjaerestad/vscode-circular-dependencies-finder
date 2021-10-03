@@ -2,9 +2,10 @@ import * as vscode from 'vscode';
 import { join } from 'path';
 
 interface IGetWebViewProps {
-  dependencyTree: string[][],
-  extensionPath: string,
-  webview: vscode.Webview,
+  dependencyTree: string[][];
+  extensionPath: string;
+  title: string;
+  webview: vscode.Webview;
 }
 
 export class WebView {
@@ -15,8 +16,8 @@ export class WebView {
     private extensionContext: Pick<vscode.ExtensionContext, 'extensionPath'>
   ) { }
 
-  create(dependencyTree: string[][]) {
-    const panel = this.vsCode.window.createWebviewPanel(WebView.type, 'Circular dependencies', this.vsCode.ViewColumn.One, {
+  create(dependencyTree: string[][], title: string) {
+    const panel = this.vsCode.window.createWebviewPanel(WebView.type, title, this.vsCode.ViewColumn.One, {
       localResourceRoots: [
         vscode.Uri.file(join(this.extensionContext.extensionPath, 'dist/webview'))
       ],
@@ -26,6 +27,7 @@ export class WebView {
       dependencyTree,
       extensionPath: this.extensionContext.extensionPath,
       webview: panel.webview,
+      title,
     });
 
     return panel;
@@ -44,7 +46,7 @@ export class WebView {
    * 
    * https://content-security-policy.com/examples/allow-inline-script/
    */
-  getHtml({dependencyTree, extensionPath, webview}: IGetWebViewProps) {
+  getHtml({dependencyTree, extensionPath, title, webview}: IGetWebViewProps) {
     const dependencyTreeString = JSON.stringify(dependencyTree, null, 2);
     const nonce = this.generateNonce();
 
@@ -64,7 +66,7 @@ export class WebView {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=viewport-width, initial-scale=1.0">
           <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${webview.cspSource} 'nonce-${nonce}';">
-          <title>Circular dependencies</title>
+          <title>${title || 'Circular dependencies'}</title>
           <script nonce="${nonce}">
             window.dependencyTree = ${dependencyTreeString};
           </script>
