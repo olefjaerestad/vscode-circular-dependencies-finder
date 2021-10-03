@@ -11,15 +11,16 @@ export class FilePicker {
       '**/*.{js,ts,jsx,tsx}',
       'node_modules'
     );
-    // TODO: Make the quick pick items searchable by file path.
     const file = await this.window.showQuickPick(
       files.map((file) => ({
         label: file.fsPath.split('/').reverse()[0],
-        description: this.workspace.asRelativePath(file.fsPath).replace(/\/.[^\/]*$/, ''),
+        // description: this.workspace.asRelativePath(file.fsPath).replace(/\/.[^\/]*$/, ''),
+        description: this.workspace.asRelativePath(file.fsPath),
       } as vscode.QuickPickItem)),
       {
         title: 'Find circular dependencies: select starting file',
         placeHolder: '/path/to/file.ts',
+        matchOnDescription: true,
       }
     );
 
