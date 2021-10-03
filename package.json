@@ -10,7 +10,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:vscode-circular-dependencies-finder.find"
+    "onCommand:vscode-circular-dependencies-finder.find",
+    "onWebviewPanel:circularDependencies"
   ],
   "main": "./dist/extension.js",
   "contributes": {

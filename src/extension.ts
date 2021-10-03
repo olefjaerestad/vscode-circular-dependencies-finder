@@ -5,11 +5,12 @@ import { fileURLToPath } from 'url';
 import { FilePicker } from './classes/FilePicker';
 import { DependencyFinder } from './classes/DependencyFinder';
 import { WebView } from './classes/WebView';
+import { WebViewSerializer } from './classes/WebViewSerializer';
 
 // This method is called once, when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined (and must match the command field) in the package.json file
-	let disposable = vscode.commands.registerCommand('vscode-circular-dependencies-finder.find', async () => {
+	const disposableCommand = vscode.commands.registerCommand('vscode-circular-dependencies-finder.find', async () => {
     try {
       const file = await new FilePicker(vscode.window, vscode.workspace).pick();
       if (!file) {
@@ -29,7 +30,10 @@ export function activate(context: vscode.ExtensionContext) {
     }
 	});
 
-	context.subscriptions.push(disposable);
+  // TODO: Ensure that this works with multiple webviews with different state in each.
+  const disposableSerializer = vscode.window.registerWebviewPanelSerializer(WebView.type, new WebViewSerializer(vscode, context));
+
+	context.subscriptions.push(disposableCommand, disposableSerializer);
 }
 
 // this method is called when your extension is deactivated

@@ -8,13 +8,15 @@ interface IGetWebViewProps {
 }
 
 export class WebView {
+  static type: 'circularDependencies' = 'circularDependencies';
+
   constructor(
     private vsCode: Pick<typeof vscode, 'window' | 'ViewColumn' | 'Uri'>,
     private extensionContext: Pick<vscode.ExtensionContext, 'extensionPath'>
   ) { }
 
   create(dependencyTree: string[][]) {
-    const panel = this.vsCode.window.createWebviewPanel('circularDependencies', 'Circular dependencies', this.vsCode.ViewColumn.One, {
+    const panel = this.vsCode.window.createWebviewPanel(WebView.type, 'Circular dependencies', this.vsCode.ViewColumn.One, {
       localResourceRoots: [
         vscode.Uri.file(join(this.extensionContext.extensionPath, 'dist/webview'))
       ],
@@ -25,13 +27,24 @@ export class WebView {
       extensionPath: this.extensionContext.extensionPath,
       webview: panel.webview,
     });
+
+    return panel;
+  }
+
+  private generateNonce() {
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let nonce = '';
+    for (let i = 0; i < 32; ++i) {
+      nonce += possible[Math.floor(Math.random() * possible.length)];
+    }
+    return nonce;
   }
 
   /**
    * 
    * https://content-security-policy.com/examples/allow-inline-script/
    */
-  private getHtml({dependencyTree, extensionPath, webview}: IGetWebViewProps) {
+  getHtml({dependencyTree, extensionPath, webview}: IGetWebViewProps) {
     const dependencyTreeString = JSON.stringify(dependencyTree, null, 2);
     const nonce = this.generateNonce();
 
@@ -62,14 +75,5 @@ export class WebView {
         </body>
       </html>
     `;
-  }
-
-  private generateNonce() {
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let nonce = '';
-    for (let i = 0; i < 32; ++i) {
-      nonce += possible[Math.floor(Math.random() * possible.length)];
-    }
-    return nonce;
   }
 }
