@@ -14,7 +14,7 @@ export class DependencyFinder {
       cancellable: true,
     }, (progress, token) => {
       // TODO: Ensure that this is cancelable when working with large dependency trees.
-      return new Promise<any>((resolve, reject) => {
+      return new Promise<madge.MadgeInstance>((resolve, reject) => {
         token.onCancellationRequested(() => {
           reject('Canceled.');
         });

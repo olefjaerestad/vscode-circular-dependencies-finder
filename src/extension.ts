@@ -1,7 +1,5 @@
 // The module 'vscode' contains the VS Code extensibility API
 import * as vscode from 'vscode';
-import { resolve, join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { FilePicker } from './classes/FilePicker';
 import { DependencyFinder } from './classes/DependencyFinder';
 import { WebView } from './classes/WebView';
@@ -19,9 +17,8 @@ export function activate(context: vscode.ExtensionContext) {
 
       const circularDependencies = await new DependencyFinder(vscode.window, vscode.ProgressLocation)
         .findCircular(
-          // TODO: Replace `mock/index.ts` with file.
-          // @ts-ignore
-          resolve(join(dirname(fileURLToPath(import.meta.url))), 'mock/index.ts')
+          // resolve(join(__dirname), '../src/mock/inddex.ts') // TODO: Remove
+          file
         );
 
       new WebView(vscode, context).create(circularDependencies);
