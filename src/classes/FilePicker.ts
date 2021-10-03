@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 
 export class FilePicker {
   constructor(
-    private window: typeof vscode.window, 
-    private workspace: typeof vscode.workspace
+    private window: Pick<typeof vscode.window, 'showQuickPick'>, 
+    private workspace: Pick<typeof vscode.workspace, 'findFiles' | 'name'>
   ) { }
 
   async pick() {
@@ -12,15 +12,19 @@ export class FilePicker {
       'node_modules'
     );
     const file = await this.window.showQuickPick(
-      files.map((file) => file.fsPath.split(this.workspace.name || '')[1]),
+      files.map((file) => ({
+        label: file.fsPath.split('/').reverse()[0],
+        description: file.fsPath.split(this.workspace.name || '')[1]
+          .replace('/', '')
+          .replace(/\/.[^\/]*$/, ''),
+      } as vscode.QuickPickItem)),
       {
-        canPickMany: false,
         title: 'Find circular dependencies: select starting file',
         placeHolder: '/path/to/file.ts',
       }
     );
 
-    const sanitizedFile = file ? encodeURI(file) : null;
+    const sanitizedFile = file ? encodeURI(`${file.description}/${file.label}`) : null;
 
     return sanitizedFile;
   }
