@@ -54,9 +54,16 @@ export class WebView {
       /**
        * https://code.visualstudio.com/api/extension-guides/webview#loading-local-content
        */
-      return ['dist/webview/webview.js'].map((relativeSrc) => (
-        /*html*/`<script src="${webview.asWebviewUri(this.vsCode.Uri.file(join(extensionPath, relativeSrc)))}" type="module"></script>`
-      )).join('\n');
+      const scripts = ['dist/webview/webview.js'];
+      
+      return {
+        links: scripts.map((relativeSrc) => (
+          /*html*/`<link rel="modulepreload" href="${webview.asWebviewUri(this.vsCode.Uri.file(join(extensionPath, relativeSrc)))}">`
+        )).join('\n'),
+        scripts: scripts.map((relativeSrc) => (
+          /*html*/`<script src="${webview.asWebviewUri(this.vsCode.Uri.file(join(extensionPath, relativeSrc)))}" type="module"></script>`
+        )).join('\n'),
+      };
     };
 
     return /*html*/`
@@ -67,13 +74,14 @@ export class WebView {
           <meta name="viewport" content="width=viewport-width, initial-scale=1.0">
           <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${webview.cspSource} 'nonce-${nonce}';">
           <title>${title || 'Circular dependencies'}</title>
+          ${getJsScripts().links}
           <script nonce="${nonce}">
             window.dependencyTree = ${dependencyTreeString};
           </script>
         </head>
         <body>
           <pre>${dependencyTreeString}</pre>
-          ${getJsScripts()}
+          ${getJsScripts().scripts}
         </body>
       </html>
     `;
