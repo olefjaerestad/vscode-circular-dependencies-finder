@@ -8,7 +8,7 @@ function d3() {
   console.log(
     window.dependencyTree,
     dependencyTree,
-    select('pre'),
+    select('svg'),
     vscode,
     prevState,
   );

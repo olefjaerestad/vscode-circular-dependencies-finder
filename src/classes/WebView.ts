@@ -81,6 +81,7 @@ export class WebView {
         </head>
         <body>
           <pre>${dependencyTreeString}</pre>
+          <svg></svg>
           ${getJsScripts().scripts}
         </body>
       </html>
