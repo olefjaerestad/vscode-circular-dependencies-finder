@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { join } from 'path';
 
 interface IGetWebViewProps {
-  dependencyTree: string[][];
+  dependencyArray: string[][];
   extensionPath: string;
   title: string;
   webview: vscode.Webview;
@@ -16,7 +16,7 @@ export class WebView {
     private extensionContext: Pick<vscode.ExtensionContext, 'extensionPath'>
   ) { }
 
-  create(dependencyTree: string[][], title: string) {
+  create(dependencyArray: string[][], title: string) {
     const panel = this.vsCode.window.createWebviewPanel(WebView.type, title, this.vsCode.ViewColumn.One, {
       localResourceRoots: [
         vscode.Uri.file(join(this.extensionContext.extensionPath, 'dist/webview'))
@@ -24,7 +24,7 @@ export class WebView {
       enableScripts: true,
     });
     panel.webview.html = this.getHtml({
-      dependencyTree,
+      dependencyArray,
       extensionPath: this.extensionContext.extensionPath,
       webview: panel.webview,
       title,
@@ -46,8 +46,8 @@ export class WebView {
    * 
    * https://content-security-policy.com/examples/allow-inline-script/
    */
-  getHtml({dependencyTree, extensionPath, title, webview}: IGetWebViewProps) {
-    const dependencyTreeString = JSON.stringify(dependencyTree, null, 2);
+  getHtml({dependencyArray, extensionPath, title, webview}: IGetWebViewProps) {
+    const dependencyArrayString = JSON.stringify(dependencyArray, null, 2);
     const nonce = this.generateNonce();
 
     const getJsScripts = () => {
@@ -76,11 +76,11 @@ export class WebView {
           <title>${title || 'Circular dependencies'}</title>
           ${getJsScripts().links}
           <script nonce="${nonce}">
-            window.dependencyTree = ${dependencyTreeString};
+            window.dependencyArray = ${dependencyArrayString};
           </script>
         </head>
         <body>
-          <pre>${dependencyTreeString}</pre>
+          <pre>${dependencyArrayString}</pre>
           <svg></svg>
           ${getJsScripts().scripts}
         </body>

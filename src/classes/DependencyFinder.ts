@@ -8,7 +8,7 @@ export class DependencyFinder {
   ) { }
 
   async findCircular(filePath: string) {
-    const dependencyTree = await this.window.withProgress({
+    const dependencyArray = await this.window.withProgress({
       location: this.progressLocation.Notification,
       title: '[Circular dependencies] Analyzing dependency tree...',
       cancellable: true,
@@ -37,6 +37,6 @@ export class DependencyFinder {
       // });
     });
 
-    return dependencyTree.circular();
+    return dependencyArray.circular();
   }
 }

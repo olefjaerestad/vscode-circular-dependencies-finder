@@ -13,7 +13,7 @@ export class WebViewSerializer implements vscode.WebviewPanelSerializer {
 
   async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: Record<string, any>) {
     webviewPanel.webview.html = new WebView(this.vsCode, this.extensionContext).getHtml({
-      dependencyTree: state.dependencyTree,
+      dependencyArray: state.dependencyArray,
       extensionPath: this.extensionContext.extensionPath,
       title: webviewPanel.title,
       webview: webviewPanel.webview,
