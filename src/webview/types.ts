@@ -1,6 +1,8 @@
+import { SimulationNodeDatum, SimulationLinkDatum } from "d3";
+
 type IFileId = string;
 
-export interface INode {
+export interface INode extends SimulationNodeDatum {
   filename: string;
   id: IFileId;
 }
@@ -9,7 +11,7 @@ export type TDependencyArray = string[][];
 
 export type TNodeArray = INode[][];
 
-export interface ILink {
+export interface ILink extends SimulationLinkDatum<INode> {
   source: IFileId;
   target: IFileId;
 }
