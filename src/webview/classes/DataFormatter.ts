@@ -1,4 +1,4 @@
-import { IChartData, ILink, TDependencyArray, TNodeArray } from "../types";
+import { IChartData, ILink, TDependencyArray, TNodeArray } from "../../types";
 
 export class DataFormatter {
   dependencyArrayToChartData(deps: TDependencyArray): IChartData {

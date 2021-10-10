@@ -8,7 +8,7 @@ import {
   select,
   Simulation
 } from "d3";
-import { INode, ILink } from "../types";
+import { INode, ILink } from "../../types";
 
 export class Drawer {
   // TODO: Force all nodes to display within the SVG boundaries.
