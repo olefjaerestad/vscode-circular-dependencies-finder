@@ -9,7 +9,7 @@ function init() {
   const drawer = new Drawer();
   // VS Code makes dependencyArray available to us.
   // TODO: Remove when done testing.
-  // dependencyArray = new Array(10).fill([
+  // dependencyArray = new Array(100).fill([
   //   "e/e.ts",
   //   "f/f.ts",
   //   "d/d.ts"

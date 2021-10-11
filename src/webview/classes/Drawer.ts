@@ -6,28 +6,23 @@ import {
   forceX,
   forceY,
   select,
-  Simulation
+  Simulation,
+  zoom
 } from "d3";
+import { isNodeWithXandY } from "../../type-guards";
 import { INode, ILink } from "../../types";
 
 export class Drawer {
-  // TODO: Force all nodes to display within the SVG boundaries.
   // TODO: Fix typescript errors.
   drawGraph(nodes: INode[], links: ILink[]) {
     // https://observablehq.com/@d3/disjoint-force-directed-graph
-    // TODO: Remove
-    console.log(
-      nodes,
-      links
-    );
     const svgOptions = {
       width: 100,
       height: 100,
     };
 
     const simulation = forceSimulation(nodes)
-      // @ts-expect-error
-      .force('link', forceLink(links).id((d) => d.id))
+      .force('link', forceLink<INode, ILink>(links).id((d) => d.id))
       .force('charge', forceManyBody())
       .force('x', forceX())
       .force('y', forceY());
@@ -37,9 +32,15 @@ export class Drawer {
         `${-svgOptions.width / 2} ${-svgOptions.height / 2} ${svgOptions.width} ${svgOptions.height}`
       )
       .style('width', '100%')
-      .style('height', 'auto');
+      .style('height', 'auto')
+      // @ts-expect-error
+      .call(zoom().on('zoom', function(event) {
+        group.attr('transform', event.transform);
+      }));
 
-    const link = svg.append('g')
+    const group = svg.append('g');
+
+    const link = group.append('g')
       .attr('stroke', '#999')
       .attr('stroke-opacity', 0.6)
       .selectAll('line')
@@ -47,42 +48,44 @@ export class Drawer {
       .join('line')
       .attr('stroke-width', (d) => Math.sqrt(2));
 
-    const node = svg.append('g')
-      .attr('stroke', '#fff')
-      .attr('stroke-width', 1)
+    const node = group.append('g')
       .attr('fill', 'red')
       .selectAll('circle')
       .data(nodes)
       .join('circle')
-      .attr('r', 1)
+      .attr('r', 4)
       // @ts-expect-error
       .call(handleDrag(simulation));
+
+    const label = group.append('g')
+      .attr('fill', '#fff')
+      .selectAll('text')
+      .data(nodes)
+      .join('text')
+      .text((d) => d.filename)
+      .attr('font-size', 4);
 
     node.append('title')
       .text((d) => d.filename);
 
     simulation.on('tick', () => {
       link
-        // @ts-expect-error
-        .attr('x1', d => d.source.x)
-        // @ts-expect-error
-        .attr('y1', d => d.source.y)
-        // @ts-expect-error
-        .attr('x2', d => d.target.x)
-        // @ts-expect-error
-        .attr('y2', d => d.target.y);
+        .attr('x1', (d) => isNodeWithXandY(d.source) ? d.source.x : 0)
+        .attr('y1', (d) => isNodeWithXandY(d.source) ? d.source.y : 0)
+        .attr('x2', (d) => isNodeWithXandY(d.target) ? d.target.x : 0)
+        .attr('y2', (d) => isNodeWithXandY(d.target) ? d.target.y : 0);
 
       node
         .attr('cx', (d) => d.x!)
         .attr('cy', (d) => d.y!);
-        // .attr('cx', (d) => Math.max(-50, Math.min(50, d.x!)))
-        // .attr('cy', (d) => Math.max(-50, Math.min(50, d.y!)));
+      
+      label
+        .attr('x', (d) => d.x!)
+        .attr('y', (d) => d.y!);
     });
 
     function handleDrag(simulation: Simulation<INode, ILink>) {
-      function dragStarted(event: DragEvent, d: any) {
-        console.log({event, d});
-        // @ts-expect-error
+      function dragStarted(event: DragEvent & {active: number}, d: any) {
         if (!event.active) {
           simulation.alphaTarget(0.1).restart();
         }
@@ -96,8 +99,7 @@ export class Drawer {
         d.fy = event.y;
       }
 
-      function dragEnded(event: DragEvent, d: any) {
-        // @ts-expect-error
+      function dragEnded(event: DragEvent & {active: number}, d: any) {
         if (!event.active) {
           simulation.alphaTarget(0);
         }
