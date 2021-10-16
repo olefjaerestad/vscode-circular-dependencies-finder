@@ -16,7 +16,7 @@ export interface ILink extends SimulationLinkDatum<INode> {
   target: IFileId | INode;
 }
 
-export interface IChartData {
+export interface IGraphData {
   links: ILink[];
   nodes: INode[];
 }
