@@ -13,7 +13,6 @@ import { isNodeWithXandY } from "../../type-guards";
 import { INode, ILink } from "../../types";
 
 export class Drawer {
-  // TODO: Fix typescript errors.
   drawGraph(nodes: INode[], links: ILink[]) {
     // https://observablehq.com/@d3/disjoint-force-directed-graph
     const svgOptions = {
@@ -36,14 +35,13 @@ export class Drawer {
       .force('x', forceX())
       .force('y', forceY());
 
-    const svg = select('svg')
+    const svg = select<SVGSVGElement, INode>('svg')
       .attr('viewBox', 
         `${-svgOptions.width / 2} ${-svgOptions.height / 2} ${svgOptions.width} ${svgOptions.height}`
       )
       .style('width', '100%')
       .style('height', 'auto')
-      // @ts-expect-error
-      .call(zoom().on('zoom', function(event) {
+      .call(zoom<SVGSVGElement, INode>().on('zoom', function(event) {
         group.attr('transform', event.transform);
       }));
 
@@ -60,11 +58,10 @@ export class Drawer {
       .attr('fill', 'var(--vscode-inputValidation-errorBorder)')
       .attr('stroke', 'var(--vscode-editor-foreground)')
       .attr('stroke-width', .2)
-      .selectAll('circle')
+      .selectAll<SVGCircleElement, INode>('circle')
       .data(nodes)
       .join('circle')
       .attr('r', nodeRadius)
-      // @ts-expect-error
       .call(handleDrag(simulation));
 
     const label = group.append('g')
@@ -121,7 +118,7 @@ export class Drawer {
         d.fy = null;
       }
 
-      return drag()
+      return drag<SVGCircleElement, INode>()
         .on('start', dragStarted)
         .on('drag', dragged)
         .on('end', dragEnded);
