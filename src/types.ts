@@ -12,8 +12,8 @@ export type TDependencyArray = string[][];
 export type TNodeArray = INode[][];
 
 export interface ILink extends SimulationLinkDatum<INode> {
-  source: IFileId;
-  target: IFileId;
+  source: IFileId | INode;
+  target: IFileId | INode;
 }
 
 export interface IChartData {
