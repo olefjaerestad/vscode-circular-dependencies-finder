@@ -20,6 +20,15 @@ export class Drawer {
       width: 100,
       height: 100,
     };
+    const longestFileNameLength = nodes.sort((a,b) => b.filename.length - a.filename.length)[0]?.filename.length || 10;
+    const longestSupportedFileNameLength = 200;
+    const nodeRadius = 4 + (Math.min(longestFileNameLength / longestSupportedFileNameLength, 1) * 4);
+    const minFontSize = .2;
+    const maxFontSize = 2;
+    const fontSize = Math.max(
+      Math.min(nodeRadius * 2 / longestFileNameLength, maxFontSize),
+      minFontSize
+    );
 
     const simulation = forceSimulation(nodes)
       .force('link', forceLink<INode, ILink>(links).id((d) => d.id))
@@ -41,29 +50,33 @@ export class Drawer {
     const group = svg.append('g');
 
     const link = group.append('g')
-      .attr('stroke', '#999')
-      .attr('stroke-opacity', 0.6)
+      .attr('stroke', 'var(--vscode-editor-foreground)')
+      .attr('stroke-width', .2)
       .selectAll('line')
       .data(links)
-      .join('line')
-      .attr('stroke-width', (d) => Math.sqrt(2));
+      .join('line');
 
     const node = group.append('g')
-      .attr('fill', 'red')
+      .attr('fill', 'var(--vscode-inputValidation-errorBorder)')
+      .attr('stroke', 'var(--vscode-editor-foreground)')
+      .attr('stroke-width', .2)
       .selectAll('circle')
       .data(nodes)
       .join('circle')
-      .attr('r', 4)
+      .attr('r', nodeRadius)
       // @ts-expect-error
       .call(handleDrag(simulation));
 
     const label = group.append('g')
-      .attr('fill', '#fff')
+      .attr('fill', 'var(--vscode-editor-foreground)')
+      .attr('font-size', fontSize)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .style('pointer-events', 'none')
       .selectAll('text')
       .data(nodes)
       .join('text')
-      .text((d) => d.filename)
-      .attr('font-size', 4);
+      .text((d) => d.filename);
 
     node.append('title')
       .text((d) => d.filename);
