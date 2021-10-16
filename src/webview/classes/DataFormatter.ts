@@ -1,7 +1,7 @@
-import { IChartData, ILink, TDependencyArray, TNodeArray } from "../../types";
+import { IGraphData, ILink, TDependencyArray, TNodeArray } from "../../types";
 
 export class DataFormatter {
-  dependencyArrayToChartData(deps: TDependencyArray): IChartData {
+  dependencyArrayToGraphData(deps: TDependencyArray): IGraphData {
     const nodeTree = this.dependencyArrayToNodeTree(deps);
     
     return {

@@ -17,7 +17,6 @@ export function activate(context: vscode.ExtensionContext) {
 
       const circularDependencies = await new DependencyFinder(vscode.window, vscode.ProgressLocation)
         .findCircular(
-          // resolve(join(__dirname), '../src/mock/index.ts') // TODO: Remove
           filePath
         );
 

@@ -20,21 +20,6 @@ export class DependencyFinder {
         });
         return madge(filePath).then(resolve);
       });
-
-      // TODO: Remove.
-      // return new Promise<any>((resolve, reject) => {
-      //   token.onCancellationRequested(() => {
-      //     clearTimeout(timeout);
-      //     reject('Canceled.');
-      //   });
-      //   const timeout = setTimeout(() => {
-      //     resolve({
-      //       circular: () => {
-      //         return ['I am empty'];
-      //       }
-      //     });
-      //   }, 5000);
-      // });
     });
 
     return dependencyArray.circular();
