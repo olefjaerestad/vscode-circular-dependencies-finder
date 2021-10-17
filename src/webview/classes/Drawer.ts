@@ -15,9 +15,10 @@ import { INode, ILink } from "../../types";
 export class Drawer {
   drawGraph(nodes: INode[], links: ILink[]) {
     // https://observablehq.com/@d3/disjoint-force-directed-graph
+    const tabsHeight = document.getElementById('tabs')?.getBoundingClientRect().height;
     const svgOptions = {
       width: 100,
-      height: 100,
+      height: (window.innerHeight - (tabsHeight || 0)) / window.innerWidth * 100,
     };
     const longestFileNameLength = nodes.sort((a,b) => b.filename.length - a.filename.length)[0]?.filename.length || 10;
     const longestSupportedFileNameLength = 200;
@@ -41,6 +42,7 @@ export class Drawer {
       )
       .style('width', '100%')
       .style('height', 'auto')
+      .style('display', 'block') // Fill available space.
       .call(zoom<SVGSVGElement, INode>().on('zoom', function(event) {
         group.attr('transform', event.transform);
       }));

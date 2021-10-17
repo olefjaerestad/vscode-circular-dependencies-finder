@@ -1,3 +1,10 @@
+html {
+  /* VS Code seems to show scrollbar even when no scroll is possible, so we fix. */
+  overflow: hidden;
+}
+
 body {
+  height: 100vh;
   padding: 0;
+  overflow: auto;
 }
