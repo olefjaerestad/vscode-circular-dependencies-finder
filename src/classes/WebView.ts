@@ -86,13 +86,14 @@ export class WebView {
           <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${webview.cspSource} 'nonce-${nonce}'; style-src ${webview.cspSource};">
           <title>${title || 'Circular dependencies'}</title>
           ${scriptsAndStyles.links}
+          ${scriptsAndStyles.styles}
           <script nonce="${nonce}">
             window.dependencyArray = ${dependencyArrayString};
           </script>
         </head>
         <body>
           <wc-tabs>
-            <nav data-role="tabs">
+            <nav data-role="tabs" id="tabs">
               <button type="button" data-for="panel-graph">Graph view</button>
               <button type="button" data-for="panel-json">JSON view</button>
             </nav>
@@ -101,7 +102,6 @@ export class WebView {
               <pre data-id="panel-json">${dependencyArrayString}</pre>
             </section>
           </wc-tabs>
-          ${scriptsAndStyles.styles}
           ${scriptsAndStyles.scripts}
         </body>
       </html>

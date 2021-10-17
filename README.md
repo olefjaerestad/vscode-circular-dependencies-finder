@@ -87,8 +87,6 @@ https://www.npmjs.com/package/typescript-plugin-css-modules#visual-studio-code
 * [VS Code color reference](https://code.visualstudio.com/api/references/theme-color)
 
 ## TODO:
-- Add JSON view.
-- Make SVG graph fill window size.
 - Add 'Found no circular dependencies' message.
 - Add tests.
 - Update readme.
