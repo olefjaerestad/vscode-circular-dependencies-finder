@@ -67,6 +67,10 @@ Ensure that you've read through the extensions guidelines and follow the best pr
 
 * [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
 
+## Developing the plugin
+### Get intellisense for CSS modules
+https://www.npmjs.com/package/typescript-plugin-css-modules#visual-studio-code
+
 ## Working with Markdown
 
 **Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:

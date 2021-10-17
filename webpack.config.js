@@ -3,6 +3,7 @@
 'use strict';
 
 const path = require('path');
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
 
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
@@ -55,6 +56,12 @@ const webviewConfig = {
   resolve: {
     extensions: ['.ts', '.js']
   },
+  plugins: [
+    // @ts-expect-error
+    new miniCssExtractPlugin({
+      filename: 'webview.css',
+    })
+  ],
   module: {
     rules: [
       {
@@ -64,6 +71,20 @@ const webviewConfig = {
           {
             loader: 'ts-loader'
           }
+        ]
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: [
+          miniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              modules: true
+            },
+          },
+          'sass-loader',
         ]
       }
     ]
