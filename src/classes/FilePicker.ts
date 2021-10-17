@@ -8,7 +8,7 @@ export class FilePicker {
 
   async pick() {
     const files = await this.workspace.findFiles(
-      '**/*.{js,ts,jsx,tsx}',
+      '**/*.{js,jsx,ts,tsx,css,scss,less}',
       'node_modules'
     );
     const file = await this.window.showQuickPick(
