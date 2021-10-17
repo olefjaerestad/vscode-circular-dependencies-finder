@@ -10,7 +10,7 @@ export class DependencyFinder {
   async findCircular(filePath: string) {
     const dependencyArray = await this.window.withProgress({
       location: this.progressLocation.Notification,
-      title: '[Circular dependencies] Analyzing dependency tree...',
+      title: '[Circular Dependencies] Analyzing dependency tree...',
       cancellable: true,
     }, (progress, token) => {
       // TODO: Ensure that this is cancelable when working with large dependency trees.

@@ -18,7 +18,7 @@ export class FilePicker {
         description: this.workspace.asRelativePath(file.fsPath),
       } as vscode.QuickPickItem)),
       {
-        title: 'Find circular dependencies: select starting file',
+        title: 'Find Circular Dependencies: Select Starting File',
         placeHolder: '/path/to/file.ts',
         matchOnDescription: true,
       }

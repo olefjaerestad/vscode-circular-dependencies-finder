@@ -84,7 +84,7 @@ export class WebView {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=viewport-width, initial-scale=1.0">
           <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${webview.cspSource} 'nonce-${nonce}'; style-src ${webview.cspSource};">
-          <title>${title || 'Circular dependencies'}</title>
+          <title>${title || 'Circular Dependencies'}</title>
           ${scriptsAndStyles.links}
           ${scriptsAndStyles.styles}
           <script nonce="${nonce}">

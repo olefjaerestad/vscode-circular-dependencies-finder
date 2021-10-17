@@ -22,10 +22,10 @@ export function activate(context: vscode.ExtensionContext) {
 
       new WebView(vscode, context).create(
         circularDependencies,
-        `Circular dependencies: ${filePath.split('/').reverse()[0]}`
+        `Circular Dependencies: ${filePath.split('/').reverse()[0]}`
       );
     } catch(error) {
-      vscode.window.setStatusBarMessage(`[Circular dependencies] ${error}`, 5000);
+      vscode.window.setStatusBarMessage(`[Circular Dependencies] ${error}`, 5000);
     }
 	});
 

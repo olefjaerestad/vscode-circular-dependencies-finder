@@ -18,8 +18,8 @@
     "commands": [
       {
         "command": "vscode-circular-dependencies-finder.find",
-        "title": "Find circular dependencies",
-        "category": "Circular dependencies"
+        "title": "Find Circular Dependencies",
+        "category": "Circular Dependencies"
       }
     ]
   },
