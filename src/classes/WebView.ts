@@ -50,21 +50,32 @@ export class WebView {
     const dependencyArrayString = JSON.stringify(dependencyArray, null, 2);
     const nonce = this.generateNonce();
 
-    const getJsScripts = () => {
+    const getScriptsAndStyles = () => {
       /**
        * https://code.visualstudio.com/api/extension-guides/webview#loading-local-content
        */
       const scripts = ['dist/webview/webview.js'];
+      const styles = ['dist/webview/webview.css'];
       
       return {
-        links: scripts.map((relativeSrc) => (
-          /*html*/`<link rel="modulepreload" href="${webview.asWebviewUri(this.vsCode.Uri.file(join(extensionPath, relativeSrc)))}">`
-        )).join('\n'),
+        links: [
+          ...scripts.map((relativeSrc) => (
+            /*html*/`<link rel="modulepreload" href="${webview.asWebviewUri(this.vsCode.Uri.file(join(extensionPath, relativeSrc)))}" as="script" type="application/javascript">`
+          )),
+          ...styles.map((relativeSrc) => (
+            /*html*/`<link rel="preload" href="${webview.asWebviewUri(this.vsCode.Uri.file(join(extensionPath, relativeSrc)))}" as="style" type="text/css">`
+          ))
+        ].join('\n'),
         scripts: scripts.map((relativeSrc) => (
           /*html*/`<script src="${webview.asWebviewUri(this.vsCode.Uri.file(join(extensionPath, relativeSrc)))}" type="module"></script>`
         )).join('\n'),
+        styles: styles.map((relativeSrc) => (
+          /*html*/`<link rel="stylesheet" href="${webview.asWebviewUri(this.vsCode.Uri.file(join(extensionPath, relativeSrc)))}">`
+        )).join('\n'),
       };
     };
+
+    const scriptsAndStyles = getScriptsAndStyles();
 
     return /*html*/`
       <!DOCTYPE html>
@@ -72,16 +83,26 @@ export class WebView {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=viewport-width, initial-scale=1.0">
-          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${webview.cspSource} 'nonce-${nonce}';">
+          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ${webview.cspSource} 'nonce-${nonce}'; style-src ${webview.cspSource};">
           <title>${title || 'Circular dependencies'}</title>
-          ${getJsScripts().links}
+          ${scriptsAndStyles.links}
           <script nonce="${nonce}">
             window.dependencyArray = ${dependencyArrayString};
           </script>
         </head>
         <body>
-          <svg></svg>
-          ${getJsScripts().scripts}
+          <wc-tabs>
+            <nav data-role="tabs">
+              <button type="button" data-for="panel-graph">Graph view</button>
+              <button type="button" data-for="panel-json">JSON view</button>
+            </nav>
+            <section data-role="panels">
+              <svg data-id="panel-graph"></svg>
+              <pre data-id="panel-json">${dependencyArrayString}</pre>
+            </section>
+          </wc-tabs>
+          ${scriptsAndStyles.styles}
+          ${scriptsAndStyles.scripts}
         </body>
       </html>
     `;
