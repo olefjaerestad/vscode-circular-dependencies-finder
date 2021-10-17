@@ -1,6 +1,16 @@
-# vscode-circular-dependencies-finder README
+# VS Code Circular Dependencies Finder
+Find circular dependencies in your project. Supports the following filetypes:
+- .js
+- .jsx
+- .ts
+- .tsx
+- .css
+- .scss
+- .less
 
-This is the README for your extension "vscode-circular-dependencies-finder". After writing up a brief description, we recommend including the following sections.
+## How to use
+1. Open the command palette (View -> Command Palette, or `cmd` + `shift` + `p` on macOS, `ctrl` + `shift` + `p` on Windows).
+2. Type `circular dependencies` and select the command you wish to run.
 
 ## Features
 
@@ -65,11 +75,19 @@ Ensure that you've read through the extensions guidelines and follow the best pr
 * Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
 * Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
 
-### For more information
+## For more information
 
 * [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
 * [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 * [Learn D3](https://observablehq.com/@d3/learn-d3?collection=@d3/learn-d3)
 * [VS Code color reference](https://code.visualstudio.com/api/references/theme-color)
+
+## TODO:
+- Add JSON view.
+- Make SVG graph fill window size.
+- Add 'Found no circular dependencies' message.
+- Add tests.
+- Update readme.
+- Publish.
 
 **Enjoy!**
