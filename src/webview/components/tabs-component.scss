@@ -1,4 +1,4 @@
-wc-tabs .panel:not(.active) {
+.panel:not(.active) {
   position: absolute!important;
   width: 1px;
   height: 1px;
@@ -10,6 +10,31 @@ wc-tabs .panel:not(.active) {
   border: 0;
 }
 
+.tabs {
+  display: flex;
+}
+
 .tab {
+  font-family: -apple-system, system-ui, sans-serif;
   background-color: var(--vscode-editor-foreground);
+  flex: 1;
+  padding: 10px;
+  border: 0;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--vscode-button-foreground);
+  }
+
+  &.active {
+    text-decoration: underline;
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-background);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--vscode-button-hoverBackground);
+    }
+  }
 }

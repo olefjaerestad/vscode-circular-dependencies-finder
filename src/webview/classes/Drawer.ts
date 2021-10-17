@@ -55,7 +55,7 @@ export class Drawer {
       .join('line');
 
     const node = group.append('g')
-      .attr('fill', 'var(--vscode-inputValidation-errorBorder)')
+      .attr('fill', 'var(--vscode-button-background)')
       .attr('stroke', 'var(--vscode-editor-foreground)')
       .attr('stroke-width', .2)
       .selectAll<SVGCircleElement, INode>('circle')

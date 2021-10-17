@@ -1,3 +1,5 @@
+import './webview.scss';
+import './components/tabs-component';
 import { DataFormatter } from './classes/DataFormatter';
 import { Drawer } from './classes/Drawer';
 
