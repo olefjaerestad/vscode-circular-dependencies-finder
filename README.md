@@ -87,7 +87,6 @@ https://www.npmjs.com/package/typescript-plugin-css-modules#visual-studio-code
 * [VS Code color reference](https://code.visualstudio.com/api/references/theme-color)
 
 ## TODO:
-- Add 'Found no circular dependencies' message.
 - Add tests.
 - Update readme.
 - Publish.

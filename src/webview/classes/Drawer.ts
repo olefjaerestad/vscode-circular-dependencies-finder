@@ -13,7 +13,7 @@ import { isNodeWithXandY } from "../../type-guards";
 import { INode, ILink } from "../../types";
 
 export class Drawer {
-  drawGraph(nodes: INode[], links: ILink[]) {
+  drawGraph(nodes: INode[], links: ILink[], nodesEmptyMsg?: string) {
     // https://observablehq.com/@d3/disjoint-force-directed-graph
     const tabsHeight = document.getElementById('tabs')?.getBoundingClientRect().height;
     const svgOptions = {
@@ -48,6 +48,18 @@ export class Drawer {
       }));
 
     const group = svg.append('g');
+
+    if (!nodes.length) {
+      nodesEmptyMsg && group
+        .append('text')
+        .attr('fill', 'var(--vscode-editor-foreground)')
+        .attr('font-size', 2)
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'middle')
+        .text(nodesEmptyMsg);
+
+      return;
+    }
 
     const link = group.append('g')
       .attr('stroke', 'var(--vscode-editor-foreground)')

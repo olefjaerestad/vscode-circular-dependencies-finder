@@ -13,7 +13,7 @@ function init() {
   const { links, nodes } = dataFormatter.dependencyArrayToGraphData(dependencyArray);
 
   vscode.setState({dependencyArray});
-  drawer.drawGraph(nodes, links);
+  drawer.drawGraph(nodes, links, 'Found no circular dependencies');
 }
 
 init();
