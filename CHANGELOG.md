@@ -1,9 +1,10 @@
-# Change Log
+Releases follow [Semantic Versioning](https://semver.org/)
 
-All notable changes to the "vscode-circular-dependencies-finder" extension will be documented in this file.
+# Unreleased
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- No upcoming plans. Feel free to submit issues to 
+  https://github.com/olefjaerestad/vscode-circular-dependencies-finder/issues.
 
-## [Unreleased]
+# 1.0.0 - 2021-10-30
 
 - Initial release

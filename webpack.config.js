@@ -1,18 +1,21 @@
-//@ts-check
+// @ts-check
 
 'use strict';
 
 const path = require('path');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
 
-//@ts-check
+/** @typedef { {WEBPACK_WATCH?: boolean; WEBPACK_BUNDLE?: boolean; WEBPACK_BUILD?: boolean; [key: string]: any;} } BuildEnv **/
+/** @typedef { {devtool?: string; env: BuildEnv; mode?: string; watch?: boolean; [key: string]: any;} } BuildArgs **/
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
+/** @typedef { (env: BuildEnv, argv: BuildArgs) => WebpackConfig } WebpackConfigFunction **/
 
-/** @type WebpackConfig */
-const extensionConfig = {
+/**
+ * @type { WebpackConfigFunction }
+ */
+const extensionConfig = (env, argv) => ({
   target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
-	mode: 'none', // this leaves the source code as close as possible to the original (in dev we set to 'development', and when packaging to 'production')
-
+  mode: 'none', // this leaves the source code as close as possible to the original (in dev we set to 'development', and when packaging to 'production')
   entry: './src/extension.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
   output: {
     // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
@@ -41,10 +44,13 @@ const extensionConfig = {
       }
     ]
   },
-  devtool: 'nosources-source-map'
-};
-/** @type WebpackConfig */
-const webviewConfig = {
+  devtool: argv.mode === 'production' ? false : 'nosources-source-map'
+});
+
+/**
+ * @type { WebpackConfigFunction }
+ */
+const webviewConfig = (env, argv) => ({
   target: 'web',
 	mode: 'none',
   entry: './src/webview/webview.ts',
@@ -89,9 +95,9 @@ const webviewConfig = {
       }
     ]
   },
-  devtool: 'nosources-source-map',
+  devtool: argv.mode === 'production' ? false : 'nosources-source-map',
   experiments: {
     outputModule: true
   }
-};
+});
 module.exports = [ extensionConfig, webviewConfig ];

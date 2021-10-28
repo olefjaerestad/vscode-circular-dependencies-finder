@@ -1,43 +1,25 @@
 {
-  "name": "vscode-circular-dependencies-finder",
-  "displayName": "vscode-circular-dependencies-finder",
-  "description": "Find circular dependencies in your JavaScript/TypeScript projects.",
-  "version": "0.0.1",
-  "engines": {
-    "vscode": "^1.60.0"
-  },
-  "categories": [
-    "Other"
-  ],
   "activationEvents": [
     "onCommand:vscode-circular-dependencies-finder.find",
     "onWebviewPanel:circularDependencies"
   ],
-  "main": "./dist/extension.js",
+  "categories": [
+    "Other"
+  ],
   "contributes": {
     "commands": [
       {
+        "category": "Circular Dependencies",
         "command": "vscode-circular-dependencies-finder.find",
-        "title": "Find Circular Dependencies",
-        "category": "Circular Dependencies"
+        "title": "Find Circular Dependencies"
       }
     ]
-  },
-  "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "webpack",
-    "watch": "rm -rf dist && webpack --mode development --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "rm -rf out && tsc -w -p . --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
   },
   "dependencies": {
     "d3": "^7.0.4",
     "madge": "^5.0.1"
   },
+  "description": "Find circular dependencies in your JavaScript/TypeScript/CSS projects.",
   "devDependencies": {
     "@types/d3": "^7.0.0",
     "@types/glob": "^7.1.4",
@@ -60,5 +42,29 @@
     "typescript-plugin-css-modules": "^3.4.0",
     "webpack": "^5.52.1",
     "webpack-cli": "^4.8.0"
-  }
+  },
+  "displayName": "Circular Dependencies Finder",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "icon": "icon.png",
+  "main": "./dist/extension.js",
+  "name": "vscode-circular-dependencies-finder",
+  "publisher": "olefjaerestad",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olefjaerestad/vscode-circular-dependencies-finder.git"
+  },
+  "scripts": {
+    "compile": "webpack",
+    "compile-tests": "tsc -p . --outDir out",
+    "lint": "eslint src --ext ts",
+    "package": "rm -rf dist && webpack --mode production",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "test": "node ./out/test/runTest.js",
+    "vscode:prepublish": "npm run package",
+    "watch": "rm -rf dist && webpack --mode development --watch",
+    "watch-tests": "rm -rf out && tsc -w -p . --outDir out"
+  },
+  "version": "1.0.0"
 }
