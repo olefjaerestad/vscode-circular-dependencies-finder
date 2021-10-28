@@ -12,7 +12,7 @@ Find circular dependencies in your project. Supports the following filetypes:
 1. Open the command palette (View -> Command Palette, or <kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> on macOS, <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> on Windows).
 2. Type `circular dependencies` and select the command you wish to run.
 
-\!\[Demonstrating how to use the plugin\]\(images/demo.gif\)
+![Demonstrating how to use the plugin](how-to.gif)
 
 ## Known Issues
 - Doesn't support [tsconfig.paths](https://www.typescriptlang.org/tsconfig). 
@@ -51,7 +51,6 @@ https://www.npmjs.com/package/typescript-plugin-css-modules#visual-studio-code
 * [VS Code color reference](https://code.visualstudio.com/api/references/theme-color)
 
 ## TODO:
-- Update readme with animation on how to use the plugin.
 - Publish.
 
 **Enjoy!**
