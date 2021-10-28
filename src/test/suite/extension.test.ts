@@ -1,15 +1,41 @@
 import * as assert from 'assert';
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
+import { DependencyFinder } from '../../classes/DependencyFinder';
+
+const dependencyFinder = new DependencyFinder(vscode.window, vscode.ProgressLocation);
+const fileExtensionsToTest = ['css', 'less', 'scss', 'ts'];
 
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
-	});
+  suite('DependencyFinder.findCircular() should return an array of circular dependencies', () => {
+
+    fileExtensionsToTest.forEach((ext) => {
+      test(
+      `for a given .${ext} file`, 
+      async () => {
+        const filePath = vscode.workspace.workspaceFolders?.[0].uri.path 
+          ? vscode.workspace.workspaceFolders?.[0].uri.path + `/index.${ext}`
+          : null;
+
+        if (!filePath) {
+          assert.fail(`No index.${ext} file found. Did you forget to load a workspace?`);
+        }
+        
+        const circularDependencies = await dependencyFinder.findCircular(filePath);
+
+        assert.ok(JSON.stringify(circularDependencies) === JSON.stringify([
+          [
+            `a/a.${ext}`,
+            `b/b.${ext}`,
+          ],
+          [
+            `e/e.${ext}`,
+            `f/f.${ext}`,
+            `d/d.${ext}`,
+          ],
+        ]));
+      });
+    });
+  });
 });

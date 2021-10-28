@@ -29,7 +29,7 @@
     "watch": "rm -rf dist && webpack --mode development --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p -w . --outDir out",
+    "watch-tests": "rm -rf out && tsc -w -p . --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js"
