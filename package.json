@@ -66,5 +66,5 @@
     "watch": "rm -rf dist && webpack --mode development --watch",
     "watch-tests": "rm -rf out && tsc -w -p . --outDir out"
   },
-  "version": "0.0.1"
+  "version": "1.0.0"
 }
