@@ -1,5 +1,5 @@
 # VS Code Circular Dependencies Finder
-Find circular dependencies in your project. Supports the following filetypes: `.js`, `.jsx`, `.ts`, `.tsx`, `.css`, `.scss`, `.less`.
+Recursively find circular dependencies in your project. Supports the following filetypes: `.js`, `.jsx`, `.ts`, `.tsx`, `.css`, `.scss`, `.less`.
 
 ![Demonstrating how to use the plugin](how-to.gif)
 

@@ -23,9 +23,10 @@
 https://www.npmjs.com/package/typescript-plugin-css-modules#visual-studio-code
 
 ## Helpful links
-- [Learn D3](https://observablehq.com/@d3/learn-d3?collection=@d3/learn-d3)
+- [How To Publish VS Code extension](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
 - [VS Code color reference](https://code.visualstudio.com/api/references/theme-color)
 - [Write good changelogs](http://keepachangelog.com/)
+- [Learn D3](https://observablehq.com/@d3/learn-d3?collection=@d3/learn-d3)
 
 # TODO:
 - Publish.

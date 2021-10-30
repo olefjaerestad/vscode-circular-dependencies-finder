@@ -8,3 +8,5 @@ Releases follow [Semantic Versioning](https://semver.org/)
 # 1.0.0 - 2021-10-30
 
 - Initial release
+- Adds a `Find Circular Dependencies` command, which will display a graph and JSON view of 
+  your circular dependencies based on a selected root file.
