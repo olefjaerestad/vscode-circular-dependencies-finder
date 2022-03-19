@@ -1,12 +1,15 @@
 import './webview.scss';
+import './components/json-component';
 import './components/tabs-component';
 import { DataFormatter } from './classes/DataFormatter';
 import { Drawer } from './classes/Drawer';
-
-// https://code.visualstudio.com/api/extension-guides/webview#persistence
-const vscode = acquireVsCodeApi();
+import { vscode } from './vscode-api';
+import { SearchEventListeners } from './classes/SearchEventListeners';
+import { MessageEventListeners } from './classes/MessageEventListeners';
+import { EventListeners } from './classes/EventListeners';
 
 function init() {
+  new EventListeners([SearchEventListeners, MessageEventListeners]).add();
   const dataFormatter = new DataFormatter();
   const drawer = new Drawer();
   // VS Code makes dependencyArray available to us.

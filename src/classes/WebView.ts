@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
+import { IMessageEventPayload } from '../types';
 
 interface IGetWebViewProps {
   dependencyArray: string[][];
@@ -9,15 +10,15 @@ interface IGetWebViewProps {
 }
 
 export class WebView {
-  static type: 'circularDependencies' = 'circularDependencies';
+  static type = 'circularDependencies' as const;
 
   constructor(
     private vsCode: Pick<typeof vscode, 'window' | 'ViewColumn' | 'Uri'>,
     private extensionContext: Pick<vscode.ExtensionContext, 'extensionPath'>
   ) { }
 
-  create(dependencyArray: string[][], title: string) {
-    const panel = this.vsCode.window.createWebviewPanel(WebView.type, title, this.vsCode.ViewColumn.One, {
+  createPanel(dependencyArray: string[][], title: string, addTo?: vscode.WebviewPanel) {
+    const panel = addTo || this.vsCode.window.createWebviewPanel(WebView.type, title, this.vsCode.ViewColumn.One, {
       localResourceRoots: [
         vscode.Uri.file(join(this.extensionContext.extensionPath, 'dist/webview'))
       ],
@@ -28,6 +29,24 @@ export class WebView {
       extensionPath: this.extensionContext.extensionPath,
       webview: panel.webview,
       title,
+    });
+
+    panel.webview.onDidReceiveMessage(async (message: IMessageEventPayload) => {
+      switch(message.type) {
+        case 'initSearch': {
+          const searchQuery = await this.vsCode.window.showInputBox({
+            title: 'Find filename in circular dependencies',
+            placeHolder: 'Find',
+          });
+          panel.webview.postMessage({
+            type: 'search', 
+            data: searchQuery,
+          } as IMessageEventPayload);
+        }
+        default: {
+          return;
+        }
+      }
     });
 
     return panel;
@@ -99,7 +118,7 @@ export class WebView {
             </nav>
             <section data-role="panels">
               <svg data-id="panel-graph"></svg>
-              <pre data-id="panel-json">${dependencyArrayString}</pre>
+              <wc-json data-id="panel-json" json='${dependencyArrayString}'></wc-json>
             </section>
           </wc-tabs>
           ${scriptsAndStyles.scripts}

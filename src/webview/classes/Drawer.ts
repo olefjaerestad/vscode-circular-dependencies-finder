@@ -75,6 +75,7 @@ export class Drawer {
       .selectAll<SVGCircleElement, INode>('circle')
       .data(nodes)
       .join('circle')
+      .attr('data-value', (d) => d.filename)
       .attr('r', nodeRadius)
       .call(handleDrag(simulation));
 
