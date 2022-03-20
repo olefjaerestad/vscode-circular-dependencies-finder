@@ -12,8 +12,22 @@ import {
 import { isNodeWithXandY } from "../../type-guards";
 import { INode, ILink } from "../../types";
 
-export class Drawer {
-  drawGraph(nodes: INode[], links: ILink[], nodesEmptyMsg?: string) {
+let instanceCount = 0;
+
+export class GraphComponent extends HTMLElement {
+	dataId!: string;
+
+	constructor() {
+		super();
+		
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		this.dataId = (instanceCount++).toString();
+
+		this.append(svg);
+		this.setAttribute('data-graph-id', this.dataId);
+	}
+	
+	drawGraph(nodes: INode[], links: ILink[], nodesEmptyMsg?: string) {
     // https://observablehq.com/@d3/disjoint-force-directed-graph
     const tabsHeight = document.getElementById('tabs')?.getBoundingClientRect().height;
     const svgOptions = {
@@ -36,7 +50,7 @@ export class Drawer {
       .force('x', forceX())
       .force('y', forceY());
 
-    const svg = select<SVGSVGElement, INode>('svg')
+    const svg = select<SVGSVGElement, INode>(`wc-graph[data-graph-id="${this.dataId}"] svg`)
       .attr('viewBox', 
         `${-svgOptions.width / 2} ${-svgOptions.height / 2} ${svgOptions.width} ${svgOptions.height}`
       )
@@ -137,7 +151,8 @@ export class Drawer {
         .on('start', dragStarted)
         .on('drag', dragged)
         .on('end', dragEnded);
-    }
-      
+    } 
   }
 }
+
+!customElements.get('wc-graph') && customElements.define('wc-graph', GraphComponent);

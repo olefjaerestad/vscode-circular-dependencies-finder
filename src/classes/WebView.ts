@@ -117,7 +117,7 @@ export class WebView {
               <button type="button" data-for="panel-json">JSON view</button>
             </nav>
             <section data-role="panels">
-              <svg data-id="panel-graph"></svg>
+              <wc-graph data-id="panel-graph"></wc-graph>
               <wc-json data-id="panel-json" json='${dependencyArrayString}'></wc-json>
             </section>
           </wc-tabs>
