@@ -39,7 +39,7 @@ class JsonComponent extends HTMLElement {
 		window.removeEventListener('message', this.handleMessage);
 	}
 
-	handleMessage(event: MessageEvent<IMessageEventPayload<string>>) {
+	private handleMessage(event: MessageEvent<IMessageEventPayload<string>>) {
 		switch(event.data.type) {
 			case 'search': {
 				this.search(event.data.data || '');
@@ -50,7 +50,7 @@ class JsonComponent extends HTMLElement {
 		}
 	}
 
-	search(query: string) {
+	private search(query: string) {
 		const queryLowerCase = query.toLocaleLowerCase();
 
 		this.querySelectorAll('.dep').forEach((el) => {

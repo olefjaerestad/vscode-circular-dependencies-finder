@@ -52,7 +52,7 @@ export class WebView {
     return panel;
   }
 
-  private generateNonce() {
+  private static generateNonce() {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let nonce = '';
     for (let i = 0; i < 32; ++i) {
@@ -67,7 +67,7 @@ export class WebView {
    */
   getHtml({dependencyArray, extensionPath, title, webview}: IGetWebViewProps) {
     const dependencyArrayString = JSON.stringify(dependencyArray, null, 2);
-    const nonce = this.generateNonce();
+    const nonce = WebView.generateNonce();
 
     const getScriptsAndStyles = () => {
       /**

@@ -33,5 +33,4 @@ https://www.npmjs.com/package/typescript-plugin-css-modules#visual-studio-code
 - [Learn D3](https://observablehq.com/@d3/learn-d3?collection=@d3/learn-d3)
 
 # TODO:
-- Disable search (cmd/ctrl+f) on graph view. Alternatively enable "search to highlight" there as well (if so, move event listeners away from JsonSearchComponent).
 - Publish.

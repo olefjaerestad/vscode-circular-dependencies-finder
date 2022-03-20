@@ -1,3 +1,4 @@
+import styles from './graph-component.scss';
 import {
   drag,
   forceLink,
@@ -10,7 +11,7 @@ import {
   zoom
 } from "d3";
 import { isNodeWithXandY } from "../../type-guards";
-import { INode, ILink } from "../../types";
+import { INode, ILink, IMessageEventPayload } from "../../types";
 
 let instanceCount = 0;
 
@@ -25,8 +26,18 @@ export class GraphComponent extends HTMLElement {
 
 		this.append(svg);
 		this.setAttribute('data-graph-id', this.dataId);
+
+		this.handleMessage = this.handleMessage.bind(this);
+	}
+
+	connectedCallback() {
+		window.addEventListener('message', this.handleMessage);
 	}
 	
+	disconnectedCallback() {
+		window.removeEventListener('message', this.handleMessage);
+	}
+
 	drawGraph(nodes: INode[], links: ILink[], nodesEmptyMsg?: string) {
     // https://observablehq.com/@d3/disjoint-force-directed-graph
     const tabsHeight = document.getElementById('tabs')?.getBoundingClientRect().height;
@@ -83,7 +94,7 @@ export class GraphComponent extends HTMLElement {
       .join('line');
 
     const node = group.append('g')
-      .attr('fill', 'var(--vscode-button-background)')
+      .attr('fill', 'var(--vscode-editor-background)')
       .attr('stroke', 'var(--vscode-editor-foreground)')
       .attr('stroke-width', .2)
       .selectAll<SVGCircleElement, INode>('circle')
@@ -153,6 +164,29 @@ export class GraphComponent extends HTMLElement {
         .on('end', dragEnded);
     } 
   }
+
+	private handleMessage(event: MessageEvent<IMessageEventPayload<string>>) {
+		switch(event.data.type) {
+			case 'search': {
+				this.search(event.data.data || '');
+			}
+			default: {
+				return;
+			}
+		}
+	}
+
+	private search(query: string) {
+		const queryLowerCase = query.toLocaleLowerCase();
+
+		this.querySelectorAll('circle').forEach((el) => {
+			el.classList.remove(styles.highlight);
+
+			if (queryLowerCase && el.getAttribute('data-value')?.toLocaleLowerCase().includes(queryLowerCase)) {
+				el.classList.add(styles.highlight);
+			}
+		});
+	}
 }
 
 !customElements.get('wc-graph') && customElements.define('wc-graph', GraphComponent);
