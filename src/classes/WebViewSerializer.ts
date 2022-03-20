@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { IState } from '../types';
 import { WebView } from './WebView';
 
 /**
@@ -11,12 +12,11 @@ export class WebViewSerializer implements vscode.WebviewPanelSerializer {
     private extensionContext: Pick<vscode.ExtensionContext, 'extensionPath'>
   ) { }
 
-  async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: Record<string, any>) {
-    webviewPanel.webview.html = new WebView(this.vsCode, this.extensionContext).getHtml({
-      dependencyArray: state.dependencyArray,
-      extensionPath: this.extensionContext.extensionPath,
-      title: webviewPanel.title,
-      webview: webviewPanel.webview,
-    });
+  async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: IState) {
+    new WebView(this.vsCode, this.extensionContext).createPanel(
+      state.dependencyArray,
+      webviewPanel.title,
+      webviewPanel
+    );
   }
 }

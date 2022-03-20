@@ -1,3 +1,4 @@
+import styles from './graph-component.scss';
 import {
   drag,
   forceLink,
@@ -10,10 +11,34 @@ import {
   zoom
 } from "d3";
 import { isNodeWithXandY } from "../../type-guards";
-import { INode, ILink } from "../../types";
+import { INode, ILink, IMessageEventPayload } from "../../types";
 
-export class Drawer {
-  drawGraph(nodes: INode[], links: ILink[], nodesEmptyMsg?: string) {
+let instanceCount = 0;
+
+export class GraphComponent extends HTMLElement {
+	dataId!: string;
+
+	constructor() {
+		super();
+		
+		const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+		this.dataId = (instanceCount++).toString();
+
+		this.append(svg);
+		this.setAttribute('data-graph-id', this.dataId);
+
+		this.handleMessage = this.handleMessage.bind(this);
+	}
+
+	connectedCallback() {
+		window.addEventListener('message', this.handleMessage);
+	}
+	
+	disconnectedCallback() {
+		window.removeEventListener('message', this.handleMessage);
+	}
+
+	drawGraph(nodes: INode[], links: ILink[], nodesEmptyMsg?: string) {
     // https://observablehq.com/@d3/disjoint-force-directed-graph
     const tabsHeight = document.getElementById('tabs')?.getBoundingClientRect().height;
     const svgOptions = {
@@ -36,7 +61,7 @@ export class Drawer {
       .force('x', forceX())
       .force('y', forceY());
 
-    const svg = select<SVGSVGElement, INode>('svg')
+    const svg = select<SVGSVGElement, INode>(`wc-graph[data-graph-id="${this.dataId}"] svg`)
       .attr('viewBox', 
         `${-svgOptions.width / 2} ${-svgOptions.height / 2} ${svgOptions.width} ${svgOptions.height}`
       )
@@ -69,12 +94,13 @@ export class Drawer {
       .join('line');
 
     const node = group.append('g')
-      .attr('fill', 'var(--vscode-button-background)')
+      .attr('fill', 'var(--vscode-editor-background)')
       .attr('stroke', 'var(--vscode-editor-foreground)')
       .attr('stroke-width', .2)
       .selectAll<SVGCircleElement, INode>('circle')
       .data(nodes)
       .join('circle')
+      .attr('data-value', (d) => d.filename)
       .attr('r', nodeRadius)
       .call(handleDrag(simulation));
 
@@ -136,7 +162,31 @@ export class Drawer {
         .on('start', dragStarted)
         .on('drag', dragged)
         .on('end', dragEnded);
-    }
-      
+    } 
   }
+
+	private handleMessage(event: MessageEvent<IMessageEventPayload<string>>) {
+		switch(event.data.type) {
+			case 'search': {
+				this.search(event.data.data || '');
+			}
+			default: {
+				return;
+			}
+		}
+	}
+
+	private search(query: string) {
+		const queryLowerCase = query.toLocaleLowerCase();
+
+		this.querySelectorAll('circle').forEach((el) => {
+			el.classList.remove(styles.highlight);
+
+			if (queryLowerCase && el.getAttribute('data-value')?.toLocaleLowerCase().includes(queryLowerCase)) {
+				el.classList.add(styles.highlight);
+			}
+		});
+	}
 }
+
+!customElements.get('wc-graph') && customElements.define('wc-graph', GraphComponent);

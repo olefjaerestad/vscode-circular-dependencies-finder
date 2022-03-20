@@ -1,15 +1,12 @@
+import { IMessageEventPayload, IState, TDependencyArray } from "../types";
+
 declare global {
-  // interface Window {
-  //   dependencyArray: string[][];
-  // }
   namespace globalThis {
-    var dependencyArray: string[][];
+    var dependencyArray: TDependencyArray;
     var acquireVsCodeApi: () => {
-      getState: () => Record<string, any>;
-      postMessage: (message: string, transfer: any) => void;
-      setState: (newState: Record<string, any>) => void;
+      getState: () => IState;
+      postMessage: <D = any>(payload: IMessageEventPayload<D>) => void;
+      setState: (newState: IState) => void;
     }
   }
 }
-
-export {}

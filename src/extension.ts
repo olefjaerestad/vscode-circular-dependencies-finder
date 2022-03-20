@@ -20,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
           filePath
         );
 
-      new WebView(vscode, context).create(
+      new WebView(vscode, context).createPanel(
         circularDependencies,
         `Circular Dependencies: ${filePath.split('/').reverse()[0]}`
       );
