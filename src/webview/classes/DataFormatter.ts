@@ -13,7 +13,7 @@ export class DataFormatter {
   private dependencyArrayToNodeTree(deps: TDependencyArray): TNodeArray {
     return deps.map((subtree, i) => {
       return subtree.map((dep, j) => ({
-        filename: dep,
+        filepath: dep,
         id: `${i}-${j}`
       }));
     });

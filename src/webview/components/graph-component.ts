@@ -12,6 +12,7 @@ import {
 } from "d3";
 import { isNodeWithXandY } from "../../type-guards";
 import { INode, ILink, IMessageEventPayload } from "../../types";
+import { filename } from '../../utils/string-utils';
 
 let instanceCount = 0;
 
@@ -45,8 +46,14 @@ export class GraphComponent extends HTMLElement {
       width: 100,
       height: (window.innerHeight - (tabsHeight || 0)) / window.innerWidth * 100,
     };
-    const longestFileNameLength = nodes.sort((a,b) => b.filename.length - a.filename.length)[0]?.filename.length || 10;
-    const longestSupportedFileNameLength = 200;
+    const longestFileNameLength = nodes.length 
+      ? filename(
+          nodes.sort(
+            (a,b) => filename(b.filepath).length - filename(a.filepath).length
+          )[0].filepath
+        ).length
+      : 10;
+    const longestSupportedFileNameLength = 100;
     const nodeRadius = 4 + (Math.min(longestFileNameLength / longestSupportedFileNameLength, 1) * 4);
     const minFontSize = .2;
     const maxFontSize = 2;
@@ -100,7 +107,7 @@ export class GraphComponent extends HTMLElement {
       .selectAll<SVGCircleElement, INode>('circle')
       .data(nodes)
       .join('circle')
-      .attr('data-value', (d) => d.filename)
+      .attr('data-value', (d) => d.filepath)
       .attr('r', nodeRadius)
       .call(handleDrag(simulation));
 
@@ -113,10 +120,10 @@ export class GraphComponent extends HTMLElement {
       .selectAll('text')
       .data(nodes)
       .join('text')
-      .text((d) => d.filename);
+      .text((d) => filename(d.filepath));
 
     node.append('title')
-      .text((d) => d.filename);
+      .text((d) => d.filepath);
 
     simulation.on('tick', () => {
       link
