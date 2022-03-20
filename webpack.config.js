@@ -63,7 +63,6 @@ const webviewConfig = (env, argv) => ({
     extensions: ['.ts', '.js']
   },
   plugins: [
-    // @ts-expect-error
     new miniCssExtractPlugin({
       filename: 'webview.css',
     })

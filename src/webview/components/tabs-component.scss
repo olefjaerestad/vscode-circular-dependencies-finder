@@ -15,7 +15,7 @@
 }
 
 .tab {
-  font-family: -apple-system, system-ui, sans-serif;
+  font-family: var(--vscode-font-family);
   background-color: var(--vscode-editor-foreground);
   flex: 1;
   padding: 10px;

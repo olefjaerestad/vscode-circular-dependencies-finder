@@ -5,6 +5,11 @@ Releases follow [Semantic Versioning](https://semver.org/)
 - No upcoming plans. Feel free to submit issues to 
   https://github.com/olefjaerestad/vscode-circular-dependencies-finder/issues.
 
+# 1.1.0 - 2022-03-20
+
+- Adds "search in circular dependencies" with `cmd/ctrl+f`.
+- Hides filepaths from graph view.
+
 # 1.0.0 - 2021-10-30
 
 - Initial release
