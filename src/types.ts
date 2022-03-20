@@ -5,7 +5,7 @@ type TFileId = string;
 export type TJsonData = string;
 
 export interface INode extends SimulationNodeDatum {
-  filename: string;
+  filepath: string;
   id: TFileId;
 }
 
