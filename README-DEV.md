@@ -16,11 +16,9 @@
 1. `npm i`.
 2. Open the repo in VS Code. 
 3. Open `Run and Debug` in the sidebar and select `Extension Tests`. Alternatively, press <kbd>f5</kbd>.
-   This starts watching for file changes and opens the `Extension Development Host` window, 
-   where the tests will be run.
-4. Make changes to the test code.
-5. Test results are output to the debug console in the original window.
-6. Repeat step 3 to rerun tests.
+   This opens the `Extension Development Host` window, and the tests will be run.
+   The window will close automatically after the tests have run.
+4. Test results are output to the debug console in the original window.
 
 ## Get intellisense for CSS modules
 https://www.npmjs.com/package/typescript-plugin-css-modules#visual-studio-code
@@ -31,6 +29,4 @@ https://www.npmjs.com/package/typescript-plugin-css-modules#visual-studio-code
 - [VS Code webview](https://code.visualstudio.com/api/extension-guides/webview)
 - [Write good changelogs](http://keepachangelog.com/)
 - [Learn D3](https://observablehq.com/@d3/learn-d3?collection=@d3/learn-d3)
-
-# TODO:
-- Publish.
+- [VS Code Circular Dependencies Finder on Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=olefjaerestad.vscode-circular-dependencies-finder)
