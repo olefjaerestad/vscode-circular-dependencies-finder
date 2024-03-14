@@ -25,7 +25,7 @@ export class FilePicker {
     );
 
     const sanitizedFilePath = file 
-      ? encodeURI(`${this.workspace.workspaceFolders?.[0].uri.path || ''}/${file.description}`) 
+      ? `${this.workspace.workspaceFolders?.[0].uri.path || ''}/${file.description}` 
       : null;
 
     return sanitizedFilePath;
