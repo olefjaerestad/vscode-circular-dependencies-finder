@@ -45,7 +45,7 @@
   },
   "displayName": "Circular Dependencies Finder",
   "engines": {
-    "vscode": "^1.60.0"
+    "vscode": "^1.70.0"
   },
   "icon": "icon.png",
   "main": "./dist/extension.js",
