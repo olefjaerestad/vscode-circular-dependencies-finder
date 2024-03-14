@@ -5,6 +5,10 @@ Releases follow [Semantic Versioning](https://semver.org/)
 - No upcoming plans. Feel free to submit issues to 
   https://github.com/olefjaerestad/vscode-circular-dependencies-finder/issues.
 
+# 1.1.1 - 2024-03-14
+
+- Add support for special characters in filepaths.
+
 # 1.1.0 - 2022-03-20
 
 - Adds "search in circular dependencies" with `cmd/ctrl+f`.
