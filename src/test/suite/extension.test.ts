@@ -23,7 +23,7 @@ suite('Extension Test Suite', () => {
         
         const circularDependencies = await dependencyFinder.findCircular(filePath);
 
-        assert.ok(JSON.stringify(circularDependencies) === JSON.stringify([
+        assert.deepStrictEqual(circularDependencies, [
           [
             `a/a.${ext}`,
             `b/b.${ext}`,
@@ -33,12 +33,12 @@ suite('Extension Test Suite', () => {
             `f/f.${ext}`,
             `d/d.${ext}`,
           ],
-        ]));
+        ]);
       });
     });
   });
 
-  suite('DependencyFinder.findCircular() should support file paths with special characters', () => {
+  suite('Issue #13: DependencyFinder.findCircular() should support file paths with special characters', () => {
     const folders = ['@folder-name', '(.)folder-name', '[folder-name]', '[...folder-name]', '[[...folder-name]]', '_folder-name'];
 
     folders.forEach((folder) => {
@@ -53,13 +53,49 @@ suite('Extension Test Suite', () => {
         
         const circularDependencies = await dependencyFinder.findCircular(filePath);
   
-        assert.equal(JSON.stringify(circularDependencies), JSON.stringify([
+        assert.deepStrictEqual(circularDependencies, [
           [
             '../../a/a.ts',
             '../../b/b.ts',
           ],
-        ]));
+        ]);
       });
     });
   });
+
+  suite('Issue #16: DependencyFinder.findCircular() should be able to include and exclude `import type` statements', () => {
+      test('include `import type` statements', async () => {
+        const filePath = vscode.workspace.workspaceFolders?.[0].uri.path 
+          ? vscode.workspace.workspaceFolders?.[0].uri.path + `/types/types-a.ts`
+          : null;
+
+        if (!filePath) {
+          assert.fail('No /types/types-a.ts file found. Did you forget to load a workspace?');
+        }
+        
+        const circularDependencies = await dependencyFinder.findCircular(filePath);
+        
+        assert.deepStrictEqual(circularDependencies, [[
+          'types-a.ts',
+          'types-b.ts',
+          'types-c.ts',
+        ]]);
+      });
+
+      test('exclude `import type` statements', async () => {
+        const filePath = vscode.workspace.workspaceFolders?.[0].uri.path 
+          ? vscode.workspace.workspaceFolders?.[0].uri.path + `/types/types-a.ts`
+          : null;
+
+        if (!filePath) {
+          assert.fail('No /types/types-a.ts file found. Did you forget to load a workspace?');
+        }
+        
+        const circularDependencies = await dependencyFinder.findCircular(filePath, {
+          excludeTypeImports: true,
+        });
+        
+        assert.deepStrictEqual(circularDependencies, []);
+      });
+    });
 });

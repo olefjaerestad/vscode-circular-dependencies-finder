@@ -1,13 +1,33 @@
 import * as vscode from 'vscode';
 import * as madge from 'madge';
 
+interface FindCircularConfig {
+  /**
+   * Exclude `import type` statements when calculating circular dependencies.
+   */
+  excludeTypeImports?: boolean;
+}
+
 export class DependencyFinder {
   constructor(
     private window: typeof vscode.window,
     private progressLocation: typeof vscode.ProgressLocation,
   ) { }
 
-  async findCircular(filePath: string) {
+  _toMadgeConfig(config?: FindCircularConfig): madge.MadgeConfig {
+    return {
+      detectiveOptions: config?.excludeTypeImports ? {
+        es6: {
+          skipTypeImports: true
+        },
+        ts: {
+          skipTypeImports: true,
+        },
+      } : undefined,
+    };
+  }
+
+  async findCircular(filePath: string, config?: FindCircularConfig) {
     const dependencyArray = await this.window.withProgress({
       location: this.progressLocation.Notification,
       title: '[Circular Dependencies] Analyzing dependency tree...',
@@ -18,7 +38,7 @@ export class DependencyFinder {
         token.onCancellationRequested(() => {
           reject('Canceled.');
         });
-        return madge(filePath).then(resolve);
+        return madge(filePath, this._toMadgeConfig(config)).then(resolve);
       });
     });
 

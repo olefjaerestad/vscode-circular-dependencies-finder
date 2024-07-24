@@ -15,9 +15,14 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
+      const excludeTypeImports = vscode.workspace
+        .getConfiguration('circularDependenciesFinder')
+        .get<boolean>('excludeTypeImports');
+
       const circularDependencies = await new DependencyFinder(vscode.window, vscode.ProgressLocation)
         .findCircular(
-          filePath
+          filePath,
+          { excludeTypeImports }
         );
 
       new WebView(vscode, context).createPanel(

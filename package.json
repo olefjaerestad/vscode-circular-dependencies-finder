@@ -13,11 +13,21 @@
         "command": "vscode-circular-dependencies-finder.find",
         "title": "Find Circular Dependencies"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Circular Dependencies Finder",
+      "properties": {
+        "circularDependenciesFinder.excludeTypeImports": {
+          "description": "Exclude `import type` statements when calculating circular dependencies.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
   },
   "dependencies": {
     "d3": "^7.6.1",
-    "madge": "^5.0.1"
+    "madge": "^7.0.0"
   },
   "description": "Recursively find circular dependencies in your JavaScript/TypeScript/CSS project.",
   "devDependencies": {
