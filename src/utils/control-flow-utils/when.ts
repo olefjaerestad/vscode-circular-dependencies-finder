@@ -41,20 +41,7 @@
  * 
  * @see https://kotlinlang.org/docs/control-flow.html#when-expression
  */
-function when<
-  VALUE = undefined,
-  BRANCHES extends [
-    Branch<NoInfer<VALUE> extends undefined ? unknown : NoInfer<VALUE>>,
-    ...Branch<NoInfer<VALUE> extends undefined ? unknown : NoInfer<VALUE>>[]
-  ] = [
-    Branch<NoInfer<VALUE> extends undefined ? unknown : NoInfer<VALUE>>,
-    ...Branch<NoInfer<VALUE> extends undefined ? unknown : NoInfer<VALUE>>[]
-  ]
->(
-  ...branches: BRANCHES
-): VALUE extends undefined
-  ? ReturnType<BRANCHES[number][1]> | undefined
-  : VALUE {
+function when<BRANCHES extends [Branch, ...Branch[]]>(...branches: BRANCHES): ReturnType<BRANCHES[number][1]> | undefined {
   const branch = branches.find(([expr]) => {
     let use = false;
     if (typeof expr === 'function') {
@@ -65,11 +52,9 @@ function when<
     return use;
   });
 
-  return branch?.[1]() as VALUE extends undefined
-    ? ReturnType<BRANCHES[number][1]> | undefined
-    : VALUE;
+  return branch?.[1]() as ReturnType<BRANCHES[number][1]> | undefined;
 }
 
-type Branch<VALUE> = [expression: unknown, value: () => VALUE];
+type Branch = [expression: unknown, value: () => unknown];
 
 export { when };
