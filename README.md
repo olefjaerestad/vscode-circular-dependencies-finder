@@ -7,6 +7,14 @@ Recursively find circular dependencies in your project. Supports the following f
 1. Open the command palette (View -> Command Palette, or <kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> on macOS, <kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> on Windows).
 2. Type `circular dependencies` and select the command you wish to run.
 
+## Settings
+
+### `circularDependenciesFinder.excludeTypeImports`
+- Exclude `import type` statements when calculating circular dependencies.
+- Type: `boolean`
+- Default: `false`
+
+
 ## Known Issues
 - Doesn't support [tsconfig.paths](https://www.typescriptlang.org/tsconfig). 
 - Doesn't detect `.ts` imports from `.js` files.

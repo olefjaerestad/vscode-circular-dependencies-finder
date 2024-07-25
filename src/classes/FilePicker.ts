@@ -1,4 +1,8 @@
 import * as vscode from 'vscode';
+import { when } from '../utils/control-flow-utils/when';
+
+type QuickPickItem<AdditionalProperties extends Record<PropertyKey, any> = {}> = 
+  vscode.QuickPickItem & AdditionalProperties;
 
 export class FilePicker {
   constructor(
@@ -7,27 +11,37 @@ export class FilePicker {
   ) { }
 
   async pick() {
-    const files = await this.workspace.findFiles(
-      '**/*.{js,jsx,ts,tsx,css,scss,less}',
-      'node_modules'
-    );
-    const file = await this.window.showQuickPick(
-      files.map((file) => ({
-        label: file.fsPath.split('/').reverse()[0],
-        // description: this.workspace.asRelativePath(file.fsPath).replace(/\/.[^\/]*$/, ''),
-        description: this.workspace.asRelativePath(file.fsPath),
-      } as vscode.QuickPickItem)),
-      {
-        title: 'Find Circular Dependencies: Select Starting File',
-        placeHolder: '/path/to/file.ts',
-        matchOnDescription: true,
-      }
+    const method = await this.window.showQuickPick([
+      { label: 'In current file', value: 'IN_CURRENT_FILE' }, 
+      { label: 'Select file...', value: 'IN_SELECTED_FILE' },
+    ] as QuickPickItem<{value: 'IN_CURRENT_FILE' | 'IN_SELECTED_FILE'}>[]);
+
+    const filePath = await when(
+      [method?.value === 'IN_CURRENT_FILE', () => {
+        return vscode.window.activeTextEditor?.document.fileName;
+      }],
+      [method?.value === 'IN_SELECTED_FILE', async () => {
+        const files = await this.workspace.findFiles(
+          '**/*.{js,jsx,ts,tsx,css,scss,less}',
+          'node_modules'
+        );
+        const file = await this.window.showQuickPick(
+          files.map((file) => ({
+            label: file.fsPath.split('/').reverse()[0],
+            description: this.workspace.asRelativePath(file.fsPath),
+            path: file.fsPath,
+          } as QuickPickItem<{path: string}>)),
+          {
+            title: 'Find Circular Dependencies: Select Starting File',
+            placeHolder: '/path/to/file.ts',
+            matchOnDescription: true,
+          }
+        );
+
+        return file?.path;
+      }],
     );
 
-    const sanitizedFilePath = file 
-      ? `${this.workspace.workspaceFolders?.[0].uri.path || ''}/${file.description}` 
-      : null;
-
-    return sanitizedFilePath;
+    return filePath; 
   }
 }
