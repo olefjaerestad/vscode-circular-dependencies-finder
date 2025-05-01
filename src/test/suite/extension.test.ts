@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { DependencyFinder } from '../../classes/DependencyFinder';
 
 const dependencyFinder = new DependencyFinder(vscode.window, vscode.ProgressLocation);
-const fileExtensionsToTest = ['css', 'less', 'scss', 'ts', 'js'];
+const fileExtensionsToTest = ['js', 'ts', 'jsx', 'tsx', 'css', 'less', 'scss'];
 
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
@@ -64,38 +64,73 @@ suite('Extension Test Suite', () => {
   });
 
   suite('Issue #16: DependencyFinder.findCircular() should be able to include and exclude `import type` statements', () => {
-      test('include `import type` statements', async () => {
-        const filePath = vscode.workspace.workspaceFolders?.[0].uri.path 
-          ? vscode.workspace.workspaceFolders?.[0].uri.path + `/types/types-a.ts`
-          : null;
+    test('include `import type` statements', async () => {
+      const filePath = vscode.workspace.workspaceFolders?.[0].uri.path 
+        ? vscode.workspace.workspaceFolders?.[0].uri.path + `/types/types-a.ts`
+        : null;
 
-        if (!filePath) {
-          assert.fail('No /types/types-a.ts file found. Did you forget to load a workspace?');
-        }
-        
-        const circularDependencies = await dependencyFinder.findCircular(filePath);
-        
-        assert.deepStrictEqual(circularDependencies, [[
-          'types-a.ts',
-          'types-b.ts',
-          'types-c.ts',
-        ]]);
-      });
-
-      test('exclude `import type` statements', async () => {
-        const filePath = vscode.workspace.workspaceFolders?.[0].uri.path 
-          ? vscode.workspace.workspaceFolders?.[0].uri.path + `/types/types-a.ts`
-          : null;
-
-        if (!filePath) {
-          assert.fail('No /types/types-a.ts file found. Did you forget to load a workspace?');
-        }
-        
-        const circularDependencies = await dependencyFinder.findCircular(filePath, {
-          excludeTypeImports: true,
-        });
-        
-        assert.deepStrictEqual(circularDependencies, []);
-      });
+      if (!filePath) {
+        assert.fail('No /types/types-a.ts file found. Did you forget to load a workspace?');
+      }
+      
+      const circularDependencies = await dependencyFinder.findCircular(filePath);
+      
+      assert.deepStrictEqual(circularDependencies, [[
+        'types-a.ts',
+        'types-b.ts',
+        'types-c.ts',
+      ]]);
     });
+
+    test('exclude `import type` statements', async () => {
+      const filePath = vscode.workspace.workspaceFolders?.[0].uri.path 
+        ? vscode.workspace.workspaceFolders?.[0].uri.path + `/types/types-a.ts`
+        : null;
+
+      if (!filePath) {
+        assert.fail('No /types/types-a.ts file found. Did you forget to load a workspace?');
+      }
+      
+      const circularDependencies = await dependencyFinder.findCircular(filePath, {
+        excludeTypeImports: true,
+      });
+      
+      assert.deepStrictEqual(circularDependencies, []);
+    });
+  });
+
+  suite('Issue #21: DependencyFinder.findCircular() should be able to include and exclude dynamic imports (`import(module)`)', () => {
+    test('include dynamic imports', async () => {
+      const filePath = vscode.workspace.workspaceFolders?.[0].uri.path 
+        ? vscode.workspace.workspaceFolders?.[0].uri.path + `/dynamic-imports/a.ts`
+        : null;
+
+      if (!filePath) {
+        assert.fail('No /dynamic-imports/a.ts file found. Did you forget to load a workspace?');
+      }
+      
+      const circularDependencies = await dependencyFinder.findCircular(filePath);
+      
+      assert.deepStrictEqual(circularDependencies, [[
+        'a.ts',
+        'b.ts',
+      ]]);
+    });
+
+    test('exclude dynamic imports', async () => {
+      const filePath = vscode.workspace.workspaceFolders?.[0].uri.path 
+        ? vscode.workspace.workspaceFolders?.[0].uri.path + `/dynamic-imports/a.ts`
+        : null;
+
+      if (!filePath) {
+        assert.fail('No /dynamic-imports/a.ts file found. Did you forget to load a workspace?');
+      }
+      
+      const circularDependencies = await dependencyFinder.findCircular(filePath, {
+        excludeDynamicImports: true,
+      });
+      
+      assert.deepStrictEqual(circularDependencies, []);
+    });
+  });
 });
