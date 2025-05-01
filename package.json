@@ -17,6 +17,11 @@
     "configuration": {
       "title": "Circular Dependencies Finder",
       "properties": {
+        "circularDependenciesFinder.excludeDynamicImports": {
+          "description": "Exclude dynamic imports (`import(module)`) when calculating circular dependencies.",
+          "type": "boolean",
+          "default": false
+        },
         "circularDependenciesFinder.excludeTypeImports": {
           "description": "Exclude `import type` statements when calculating circular dependencies.",
           "type": "boolean",

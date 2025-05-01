@@ -9,6 +9,11 @@ Recursively find circular dependencies in your project. Supports the following f
 
 ## Settings
 
+### `circularDependenciesFinder.excludeDynamicImports`
+- Exclude dynamic imports (`import(module)`) when calculating circular dependencies.
+- Type: `boolean`
+- Default: `false`
+
 ### `circularDependenciesFinder.excludeTypeImports`
 - Exclude `import type` statements when calculating circular dependencies.
 - Type: `boolean`

@@ -3,6 +3,10 @@ import * as madge from 'madge';
 
 interface FindCircularConfig {
   /**
+   * Exclude dynamic imports (`import(module)`) when calculating circular dependencies.
+   */
+  excludeDynamicImports?: boolean;
+  /**
    * Exclude `import type` statements when calculating circular dependencies.
    */
   excludeTypeImports?: boolean;
@@ -16,14 +20,20 @@ export class DependencyFinder {
 
   _toMadgeConfig(config?: FindCircularConfig): madge.MadgeConfig {
     return {
-      detectiveOptions: config?.excludeTypeImports ? {
+      detectiveOptions: {
         es6: {
-          skipTypeImports: true
+          skipAsyncImports: config?.excludeDynamicImports,
+          skipTypeImports: config?.excludeTypeImports,
         },
         ts: {
-          skipTypeImports: true,
+          skipAsyncImports: config?.excludeDynamicImports,
+          skipTypeImports: config?.excludeTypeImports,
         },
-      } : undefined,
+        tsx: {
+          skipAsyncImports: config?.excludeDynamicImports,
+          skipTypeImports: config?.excludeTypeImports,
+        },
+      },
     };
   }
 
