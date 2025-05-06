@@ -5,6 +5,12 @@ Releases follow [Semantic Versioning](https://semver.org/)
 - No upcoming plans. Feel free to submit issues to 
   https://github.com/olefjaerestad/vscode-circular-dependencies-finder/issues.
 
+# 1.3.0 - 2025-05-06
+
+- Display import direction on results screen.
+- Add setting ('circularDependenciesFinder.excludeDynamicImports') for excluding 
+  dynamic imports (`import('my-module')`) when calculating circular dependencies.
+
 # 1.2.0 - 2024-07-25
 
 - Add setting ('circularDependenciesFinder.excludeTypeImports') for excluding 
