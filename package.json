@@ -17,6 +17,11 @@
     "configuration": {
       "title": "Circular Dependencies Finder",
       "properties": {
+        "circularDependenciesFinder.excludeDynamicImports": {
+          "description": "Exclude dynamic imports (`import(module)`) when calculating circular dependencies.",
+          "type": "boolean",
+          "default": false
+        },
         "circularDependenciesFinder.excludeTypeImports": {
           "description": "Exclude `import type` statements when calculating circular dependencies.",
           "type": "boolean",
@@ -76,5 +81,5 @@
     "watch": "rm -rf dist && webpack --mode development --watch",
     "watch-tests": "rm -rf out && tsc -w -p . --outDir out"
   },
-  "version": "1.2.0"
+  "version": "1.3.0"
 }

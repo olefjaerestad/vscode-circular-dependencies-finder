@@ -98,7 +98,25 @@ export class GraphComponent extends HTMLElement {
       .attr('stroke-width', .2)
       .selectAll('line')
       .data(links)
-      .join('line');
+      .join('line')
+      .attr('marker-end', 'url(#arrow)');
+
+    // https://stackoverflow.com/a/36965964
+    // https://jsfiddle.net/4xt5v51m/3/
+    const arrow = group.append('defs')
+      .selectAll('marker')
+      .data(['placeholderData'])
+      .join('marker')
+      .attr('id', 'arrow')
+      .attr('viewBox', '0 0 5 10')
+      .attr('refX', nodeRadius * 8) // Magic number that places arrow outside of node.
+      .attr('refY', 5)
+      .attr('markerWidth', 5)
+      .attr('markerHeight', 10)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,0 L5,5 L0,10')
+      .attr('fill', 'var(--vscode-editor-foreground)');
 
     const node = group.append('g')
       .attr('fill', 'var(--vscode-editor-background)')
