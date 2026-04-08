@@ -1,9 +1,6 @@
 import { E } from '../e/e.jsx';
 
 export function C() {
-  return (
-    <div>
-      <E />
-    </div>
-  );
+  // @ts-expect-error: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found.
+  return <E />;
 }

@@ -1,5 +1,5 @@
 # VS Code Circular Dependencies Finder
-Recursively find circular dependencies in your project. Supports the following filetypes: `.js`, `.jsx`, `.ts`, `.tsx`, `.css`, `.scss`, `.less`.
+Recursively find circular dependencies in your project. Supports the following filetypes: `.js`, `.jsx`, `.ts`, `.tsx`, `.vue`, `.css`, `.scss`, `.less`.
 
 ![Demonstrating how to use the plugin](how-to.gif)
 
@@ -21,7 +21,7 @@ Recursively find circular dependencies in your project. Supports the following f
 
 
 ## Known Issues
-- Doesn't support [tsconfig.paths](https://www.typescriptlang.org/tsconfig). 
+- Doesn't support [tsconfig.paths](https://www.typescriptlang.org/tsconfig/#paths). 
 - Doesn't detect `.ts` imports from `.js` files.
 
 **Enjoy!**

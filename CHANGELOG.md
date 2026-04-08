@@ -5,6 +5,10 @@ Releases follow [Semantic Versioning](https://semver.org/)
 - No upcoming plans. Feel free to submit issues to 
   https://github.com/olefjaerestad/vscode-circular-dependencies-finder/issues.
 
+# 1.4.0 - 2026-04-13
+
+- Add support for `.vue` files.
+
 # 1.3.0 - 2025-05-06
 
 - Display import direction on results screen.

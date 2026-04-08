@@ -34,6 +34,14 @@ export class DependencyFinder {
           skipTypeImports: config?.excludeTypeImports,
         },
       },
+      /**
+       * Fix for .vue files. 
+       * @see https://github.com/pahen/madge/blob/master/test/vue.js#L9
+       * @see https://github.com/pahen/madge/issues/122
+       */
+      tsConfig: {
+        compilerOptions: {}
+      }
     };
   }
 
