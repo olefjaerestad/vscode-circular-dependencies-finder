@@ -22,7 +22,7 @@ export class FilePicker {
       }],
       [method?.value === 'IN_SELECTED_FILE', async () => {
         const files = await this.workspace.findFiles(
-          '**/*.{js,jsx,ts,tsx,css,scss,less}',
+          '**/*.{js,jsx,ts,tsx,vue,css,scss,less}',
           'node_modules'
         );
         const file = await this.window.showQuickPick(

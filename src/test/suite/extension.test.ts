@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { DependencyFinder } from '../../classes/DependencyFinder';
 
 const dependencyFinder = new DependencyFinder(vscode.window, vscode.ProgressLocation);
-const fileExtensionsToTest = ['js', 'ts', 'jsx', 'tsx', 'css', 'less', 'scss'];
+const fileExtensionsToTest = ['js', 'ts', 'jsx', 'tsx', 'vue', 'css', 'less', 'scss'];
 
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
